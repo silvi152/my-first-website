@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Physics Special Quiz</title>
+ <style>
+  body{font-family:Arial, sans-serif; background: #e3f2fd; padding:12px; max-width:620px; margin:auto;}
+  h1{text-align:center; color:#4169E1; margin-bottom: 5px;}
+  
+  /* সেট কন্টেইনার ও বাটনের সুন্দর ডিজাইন */
+  .set-container { background: white; padding: 12px; border-radius: 12px; margin-bottom: 15px; box-shadow: 2 2px 8px rgba(0,0,0,.1); text-align: center; }
+  .set-container p { margin: 0 0 10px 0; font-weight: bold; color: #555; }
+  .btn-group { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .set-btn { 
+  background: #e3f2fd; /* হালকা কমলার বদলে হালকা নীল */
+  color: #0d47a1;     /* লেখার রঙ গাঢ় নীল */
+  border: 1px solid #90caf9; 
+  padding: 8px 12px; 
+  border-radius: 20px; 
+  cursor: pointer; 
+  font-weight: bold; 
+  transition: 0.2s; 
+}
+
+
+  .set-btn.active, .set-btn:hover { background: #4169E1; color: white; border-color: #e65100; }
+  
+  .card{background:white; padding:14px; border-radius:12px; margin:12px 0; box-shadow:6 2px 8px rgba(0,0,0,.1);}
+  button.opt{width:100%; padding:11px; margin:5px 0; border:1px solid #ddd; border-radius:8px; background:#fff3e0; text-align:left; font-size:15px; cursor: pointer; transition: 0.2s;}
+  button.opt:hover{background: #ffe0b2;}
+  button.opt.correct{background:#c8e6c9!important; border-color:green; color: #1b5e20; font-weight: bold;}
+  button.opt.wrong{background:#ffcdd2!important; border-color:red; color: #b71c1c;}
+  
+  #top {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  font-weight: bold; 
+  font-size: 14px;
+  position: sticky; 
+  top: 0; 
+  background: white; /* সাদা ব্যাকগ্রাউন্ড দেওয়া হলো যাতে স্ক্রোল করার সময় নিচের লেখা ভেসে না ওঠে */
+  padding: 12px 15px; /* চারদিকে পর্যাপ্ত জায়গা দেওয়া হলো যেন লেখা বাইরে না যায় */
+  margin: 10px 0;
+  border-radius: 10px; /* স্কোরবোর্ডটিকে একটি সুন্দর আলাদা বক্সে রূপান্তর করা হলো */
+  box-shadow: 0 2px 8px rgba(0,0,0,.1); /* হালকা শ্যাডো দিয়ে সুন্দর লুক দেওয়া হলো */
+  z-index: 100; /* যেন স্ক্রোল করার সময় এটি সবসময় সবার উপরে ভেসে থাকে */
+  color: #2e7d32;
+}
+
+  #barWrap{height:10px; background:#ddd; border-radius:5px; overflow:hidden; margin:5px 0 15px;}
+  #bar{height:100%; background:#e65100; width:0%; transition:0.3s;}
+  #nextBtn{width:100%; padding:14px; background:#e65100; color:white; border:none; border-radius:10px; font-size:18px; margin:15px 0; display:none; cursor: pointer;}
+ </style>
+</head>
+<body>
+   <h1>⚛️ Physics Special Quiz</h1>
+   
+   <div class="set-container">
+        <p>আপনার পছন্দের কুইজ সেট সিলেক্ট করুন:</p>
+        <div class="btn-group">
+            <button id="btnSet1" class="set-btn active" onclick="changeSet(0)">সেট 1 (1-15)</button>
+            <button id="btnSet2" class="set-btn" onclick="changeSet(1)">সেট 2 (16-30)</button>
+            <button id="btnSet3" class="set-btn" onclick="changeSet(2)">সেট 3 (31-45)</button>
+            <button id="btnSet4" class="set-btn" onclick="changeSet(3)">সেট 4 (46-60)</button>
+            <button id="btnSet5" class="set-btn" onclick="changeSet(4)">সেট 5 (61-75)</button>
+            <button id="btnSet6" class="set-btn" onclick="changeSet(5)">সেট 6 (76-90)</button>
+            <button id="btnSet7" class="set-btn" onclick="changeSet(6)">সেট 7(91-105)</button>
+          
+            
+        </div>
+   </div>
+   
+   <div id="top"><span id="pageInfo"></span><span id="scoreInfo">Score: 0/0</span></div>
+   <div id="barWrap"><div id="bar"></div></div>
+   <div id="quiz"></div>
+   <button id="nextBtn" onclick="nextSet()">পরের 15 টা ➡️</button>
+
+   <script>
+    const allQuestions = [
+     
+     {q:"বলের একক কি?", o:["Joule","Newton","Watt","Pascal"], a:1},
+     {q:"কাজের একক কি?", o:["Joule","Newton","Watt","Volt"], a:0},
+     {q:"ক্ষমতার একক কি?", o:["Joule","Newton","Watt","Ampere"], a:2},
+      {q:"বেগের মাত্রা?", o:["LT^-1","LT^-2","LT","L/T^2"], a:0},
+     {q:"ত্বরণের একক?", o:["m/s","m/s^2","m^2/s","N"], a:1},
+     {q:"নিউটনের 1ম সূত্র কি?", o:["F=ma","জড়তার সূত্র","ক্রিয়া-প্রতিক্রিয়া","মহাকর্ষ"], a:1},
+     {q:"F=ma কোন সূত্র?", o:["1ম","2য়","3য়","4র্থ"], a:1},
+     {q:"ভরবেগ p =?", o:["mv","ma","mgh","1/2 mv^2"], a:0},
+     {q:"গতিশক্তি =?", o:["mgh","1/2 mv^2","mv","ma"], a:1},
+     {q:"বিভব শক্তি =?", o:["mgh","1/2 mv^2","mv","Fs"], a:0},
+     {q:"g এর মান কত?", o:["9.8 m/s^2","10 m/s^2","8.9 m/s^2","9.8 m/s"], a:0},
+     {q:"মুক্তিবেগ কত?", o:["11.2 km/s","9.8 km/s","7.9 km/s","15 km/s"], a:0},
+     {q:"মহাকর্ষীয় ধ্রুবক G =?", o:["6.67e-11","9.8","3e8","1.6e-19"], a:0},
+     {q:"আলোর বেগ c =?", o:["3x10^8 m/s","3x10^6","3x10^10","9.8"], a:0},
+     {q:"শব্দের বেগ বাতাসে?", o:["332 m/s","300 m/s","3x10^8","1500 m/s"], a:0},
+     {q:"ফ্রিকোয়েন্সির একক?", o:["Hz","m","s","J"], a:0},
+     {q:"তরঙ্গ দৈর্ঘ্যের একক?", o:["Hz","Meter","Second","Joule"], a:1},
+     {q:"ওহমের সূত্র?", o:["V=IR","F=ma","P=VI","E=mc^2"], a:0},
+     {q:"রোধের একক?", o:["Ohm","Ampere","Volt","Watt"], a:0},
+     {q:"কারেন্টের একক?", o:["Ohm","Ampere","Volt","Joule"], a:1},
+     {q:"ভোল্টেজের একক?", o:["Volt","Ampere","Ohm","Watt"], a:0},
+     {q:"P=VI কি?", o:["Power","Force","Energy","Charge"], a:0},
+     {q:"E=mc^2 কার সূত্র?", o:["Newton","Einstein","Ohm","Faraday"], a:1},
+     {q:"ইলেকট্রনের চার্জ?", o:["1.6e-19 C","1.6e+19","9.1e-31","6.67e-11"], a:0},
+     {q:"প্রোটনের ভর?", o:["9.1e-31 kg","1.67e-27 kg","1.6e-19 kg","9.8 kg"], a:1},
+     {q:"লেন্সের ক্ষমতার একক?", o:["Meter","Diopter","Watt","Joule"], a:1},
+     {q:"ফোকাস দূরত্ব f =?", o:["1/P","P^2","1/P^2","P"], a:0},
+     {q:"উত্তল লেন্স কি করে?", o:["অভিসারী","অপসারী","প্রতিফলন","কিছু না"], a:0},
+     {q:"অবতল লেন্স কি করে?", o:["অভিসারী","অপসারী","প্রতিফলন","বিবর্ধন"], a:1},
+     {q:"প্রতিসরাঙ্ক n =?", o:["c/v","v/c","c*v","c+v"], a:0},
+     {q:"স্নেলের সূত্র?", o:["n1 sinθ1=n2 sinθ2","V=IR","F=ma","E=mc^2"], a:0},
+     {q:"পানির প্রতিসরাঙ্ক?", o:["1","1.33","1.5","2.4"], a:1},
+     {q:"কাচের প্রতিসরাঙ্ক?", o:["1.33","1.5","1","2"], a:1},
+     {q:"হীরার প্রতিসরাঙ্ক?", o:["1.5","2.42","1.33","1"], a:1},
+     {q:"চাপের একক?", o:["Pascal","Newton","Joule","Watt"], a:0},
+     {q:"P =?", o:["F/A","F*A","A/F","F+A"], a:0},
+     {q:"আর্কিমিডিসের নীতি কি নিয়ে?", o:["প্লবতা","মহাকর্ষ","তড়িৎ","আলো"], a:0},
+     {q:"ঘনত্ব =?", o:["m/V","V/m","m*V","m+V"], a:0},
+     {q:"তাপমাত্রার SI একক?", o:["Celsius","Kelvin","Fahrenheit","Joule"], a:1},
+     {q:"0 K = কত C?", o:["0 C","-273 C","273 C","100 C"], a:1},
+     {q:"পানির স্ফুটনাঙ্ক?", o:["0 C","100 C","273 C","373 C"], a:1},
+     {q:"বরফ গলনাঙ্ক?", o:["0 C","100 C","-273 C","373 K"], a:0},
+     {q:"তাপের একক?", o:["Joule","Watt","Newton","Kelvin"], a:0},
+     {q:"আপেক্ষিক তাপের একক?", o:["J/kgK","J/K","W","N"], a:0},
+     {q:"লীনতাপ কি?", o:["তাপমাত্রা বাড়ায়","অবস্থা পরিবর্তন করে","চাপ বাড়ায়","কিছু না"], a:1},
+     {q:"সরল দোলকের সূত্র T=?", o:["2π√(l/g)","2π√(g/l)","π√(l/g)","2√(l/g)"], a:0},
+     {q:"কম্পাঙ্ক f =?", o:["1/T","T","T^2","2T"], a:0},
+     {q:"তরঙ্গ বেগ v =?", o:["fλ","f/λ","λ/f","f+λ"], a:0},
+     {q:"ডপলার প্রভাব কি?", o:["ফ্রিকোয়েন্সি পরিবর্তন","বেগ পরিবর্তন","ভর পরিবর্তন","চার্জ পরিবর্তন"], a:0},
+     {q:"বিদ্যুৎ প্রবাহের দিক?", o:["+ to -","- to +","উভয়","কোন না"], a:0},
+     {q:"Series এ R =?", o:["R1+R2","1/R1+1/R2","R1*R2","R1/R2"], a:0},
+     {q:"Parallel এ 1/R =?", o:["R1+R2","1/R1+1/R2","R1*R2","R1-R2"], a:1},
+     {q:"Transformer কি করে?", o:["Voltage পরিবর্তন","Power তৈরি","Charge তৈরি","আলো তৈরি"], a:0},
+     {q:"AC কে DC করে?", o:["Transformer","Rectifier","Amplifier","Motor"], a:1},
+     {q:"Motor কি করে?", o:["Electrical to Mechanical","Mechanical to Electrical","Heat to Light","None"], a:0},
+     {q:"Generator কি করে?", o:["Mechanical to Electrical","Electrical to Mechanical","Heat to Power","None"], a:0},
+     {q:"ফিউজ কেন ব্যবহার হয়?", o:["সুরক্ষা","আলো","শব্দ","চাপ"], a:0},
+     {q:"আর্থিং কেন?", o:["সুরক্ষা","বিদ্যুৎ বাড়াতে","আলো বাড়াতে","কিছু না"], a:0},
+     {q:"আলোের প্রতিফলন সূত্র?", o:["i=r","i>r","i<r","i=2r"], a:0},
+     {q:"অবতল আয়না কি করে?", o:["অভিসারী","অপসারী","সমতল","কিছু না"], a:0},
+     {q:"উত্তল আয়না কি করে?", o:["অভিসারী","অপসারী","সমতল","বিবর্ধন"], a:1},
+     {q:"মানুষের চোখের লেন্স?", o:["উত্তল","অবতল","সমতল","নলাকার"], a:0},
+     {q:"দূরদৃষ্টি তে কোন লেন্স?", o:["উত্তল","অবতল","সমতল","কিছু না"], a:0},
+     {q:"ক্ষীণদৃষ্টি তে কোন লেন্স?", o:["উত্তল","অবতল","সমতল","বেলন"], a:1},
+     {q:"Power of lens P =?", o:["1/f(m)","f","f^2","1/f^2"], a:0},
+     {q:"তড়িৎ ক্ষেত্রের একক?", o:["N/C","C/N","J/C","V/m উভয়"], a:3},
+     {q:"চৌম্বক ক্ষেত্রের একক?", o:["Tesla","Newton","Joule","Watt"], a:0},
+     {q:"লরেঞ্জ বল F =?", o:["q(v×B)","qv","qB","vB"], a:0},
+     {q:"হাফ লাইফ কি?", o:["অর্ধেক ক্ষয় হতে সময়","পুরো ক্ষয়","দ্বিগুণ","কিছু না"], a:0},
+     {q:"নিউক্লিয়াসে কি থাকে?", o:["Proton+Neutron","Electron","Proton only","Neutron only"], a:0},
+     {q:"Isotope মানে?", o:["একই Proton, ভিন্ন Neutron","ভিন্ন Proton","একই Neutron","ভিন্ন Electron"], a:0},
+     {q:"আলোর গতি বা বেগ প্রথম কে পরিমাপ করেন?", o:["রয়মার","নিউটন","গ্যালিলিও","হাইগেনস"], a:0},
+     {q:"আলোর তরঙ্গ তত্ত্ব (Wave Theory) কে প্রদান করেন?", o:["নিউটন","হাইগেনস","ম্যাক্সওয়েল","আইনস্টাইন"], a:1},
+     {q:"আলোর কণা তত্ত্ব (Corpuscular Theory) কে প্রদান করেন?", o:["নিউটন","হাইগেনস","ইয়াং","ফ্ল্যাঙ্ক"], a:0},
+     {q:"আলোর ব্যতিচার (Interference) পরীক্ষার মাধ্যমে তরঙ্গের ধর্ম কে প্রমাণ করেন?", o:["থমাস ইয়াং","ম্যাক্সওয়েল","রন্টজেন","হার্জ"], a:0},
+     {q:"আলোর তড়িৎচৌম্বক তত্ত্ব (Electromagnetic Theory) কে আবিষ্কার করেন?", o:["ম্যাক্সওয়েল","ফ্যারাডে","অ্যাম্পিয়ার","তড়িৎ"], a:0},
+     {q:"কোয়ান্টাম তত্ত্বের (Quantum Theory) প্রবক্তা বা আবিষ্কারক কে?", o:["ম্যাক্স প্ল্যাঙ্ক","আইনস্টাইন","বোর","ডালটন"], a:0},
+     {q:"আলোর ফোটো-তড়িৎ ক্রিয়া (Photoelectric Effect) সফলভাবে ব্যাখ্যা করেন কে?", o:["আইনস্টাইন","প্ল্যাঙ্ক","রন্টজেন","টমসন"], a:0},
+     {q:"রঞ্জন রশ্মি বা এক্স-রে (X-Ray) কে আবিষ্কার করেন?", o:["উইলহেম রন্টজেন","বেকরেল","কুরি","রাদারফোর্ড"], a:0},
+     {q:"তেজস্ক্রিয়তা (Radioactivity) প্রথম কে আবিষ্কার করেন?", o:["হেনরি বেকরেল","মাদাম কুরি","পিয়ের কুরি","রাদারফোর্ড"], a:0},
+     {q:"পরমাণুর নিউক্লিয়াস কে আবিষ্কার করেন?", o:["আর্নেস্ট রাদারফোর্ড","জে জে টমসন","চ্যাডউইক","বোর"], a:0},
+     {q:"পরমাণুর ভেতরের ইলেকট্রন কে আবিষ্কার করেন?", o:["জে জে টমসন","রাদারফোর্ড","চ্যাডউইক","বোর"], a:0},
+     {q:"পরমাণুর চার্জহীন কণা নিউট্রন কে আবিষ্কার করেন?", o:["জেমস চ্যাডউইক","টমসন","গোল্ডস্টেইন","ডালটন"], a:0},
+     {q:"আপেক্ষিকতার তত্ত্ব (Theory of Relativity) কে প্রদান করেন?", o:["আলবার্ট আইনস্টাইন","নিউটন","গ্যালিলিও","হকিং"], a:0},
+     {q:"গতিসূত্র এবং সর্বজনীন মহাকর্ষ সূত্র কে আবিষ্কার করেন?", o:["স্যার আইজ্যাক নিউটন","গ্যালিলিও","কেপলার","কোপারনিকাস"], a:0},
+     {q:"গ্রহগুলোর গতি সম্পর্কিত ৩টি বিখ্যাত সূত্র কে আবিষ্কার করেন?", o:["জোহানেস কেপলার","নিউটন","গ্যালিলিও","টলেমি"], a:0},
+     {q:"তড়িৎ বা বিদ্যুতের চৌম্বক ক্রিয়া প্রথম কে আবিষ্কার করেন?", o:["হান্স ক্রিশ্চিয়ান ওরস্টেড","ফ্যারাডে","অ্যাম্পিয়ার","ভোল্টা"], a:0},
+     {q:"তড়িৎচৌম্বকীয় আবেশ (Electromagnetic Induction) কে আবিষ্কার করেন?", o:["মাইকেল ফ্যারাডে","লেন্জ","ওরস্টেড","হেনরি"], a:0},
+     {q:"তড়িৎ আধানের আকর্ষণ-বিকর্ষণ সম্পর্কিত বলের সূত্র কে আবিষ্কার করেন?", o:["চার্লস কুলম্ব","ভোল্টা","ওহম","অ্যাম্পিয়ার"], a:0},
+     {q:"তড়িৎ পরিবাহীর দুই প্রান্তের বিভব পার্থক্য ও প্রবাহের বিখ্যাত সূত্র কার?", o:["জর্জ সাইমন ওহম","কুলম্ব","ভোল্টা","ওয়াট"], a:0},
+     {q:"পদার্থের স্থিতিস্থাপকতার (Elasticity) বিখ্যাত সূত্রটি কে আবিষ্কার করেন?", o:["রবার্ট হুক","প্যাসকেল","ইয়ং","নিউটন"], a:0},
+     {q:"চাপের তারতম্যে গ্যাসের আয়তন সম্পর্কিত বিখ্যাত সূত্রটি কার?", o:["রবার্ট বয়েল","চার্লস","অ্যাভোগাড্রো","গে-লুসাক"], a:0},
+     {q:"স্থির চাপে গ্যাসের আয়তন ও তাপমাত্রার সম্পর্ক কে আবিষ্কার করেন?", o:["জ্যাকুইস চার্লস","বয়েল","ডালটন","প্যাসকেল"], a:0},
+     {q:"একই তাপমাত্রা ও চাপে সমান আয়তনের গ্যাসে সমান অণু থাকে—এটি কার সূত্র?", o:["অ্যামেদেও অ্যাভোগাড্রো","চার্লস","বয়েল","নিউটনের"], a:0},
+     {q:"স্থির তরল বা বায়বীয় পদার্থে চাপের সঞ্চালন সূত্রটি কে আবিষ্কার করেন?", o:["ব্লেইজ প্যাসকেল","আর্কিমিডিস","বার্নৌলি","হুক"], a:0},
+     {q:"তরলে নিমজ্জিত বস্তুর ঊর্ধ্বমুখী বল বা প্লবতার নীতি কার?", o:["আর্কিমিডিস","প্যাসকেল","নিউটন","গ্যালিলিও"], a:0},
+     {q:"তড়িৎ প্রবাহের তাপীয় ফল (Heating Effect of Current) কে আবিষ্কার করেন?", o:["জেমস প্রেসকট জুল","ফ্যারাডে","ওহম","লেন্জ"], a:0},
+     {q:"মহাজাগতিক প্রসারণ বা মহাবিশ্ব যে ক্রমান্বয়ে প্রসারিত হচ্ছে তা কে প্রমাণ করেন?", o:["এডউইন হাবল","আইনস্টাইন","হকিং","কেপলার"], a:0},
+     {q:"কৃষ্ণগহ্বর বা ব্ল্যাক হোল (Black Hole) এর বিকিরণ তত্ত্ব কে আবিষ্কার করেন?", o:["স্টিভেন হকিং","আইনস্টাইন","পেনরোজ","নিউটন"], a:0},
+     {q:"পদার্থবিজ্ঞানে নোবেল পুরস্কার বিজয়ী প্রথম বাঙালি বিজ্ঞানী কে?", o:["স্যার সি ভি রমন","ড. আব্দুস সালাম","জগদীশ চন্দ্র বসু","সত্যেন্দ্রনাথ বসু"], a:0},
+     {q:"উদ্ভিদের যে প্রাণ আছে এবং বেতার তরঙ্গ আবিষ্কারে গুরুত্বপূর্ণ অবদান কার?", o:["স্যার জগদীশ চন্দ্র বসু","সি ভি রমন","সত্যেন্দ্রনাথ বসু","কুয়াশিউ"], a:0}
+
+   ];
+
+   let currentSet = 0, totalScore = 0, totalAnswered = 0;
+    const perPage = 15;
+
+    // সেট বাটনে ক্লিক করলে কাজ করার ফাংশন
+    function changeSet(setNumber) {
+        currentSet = setNumber;
+        
+        // সব বাটন থেকে active ক্লাস রিমুভ করে নির্দিষ্ট বাটনে অ্যাড করা
+        let buttons = document.querySelectorAll('.set-btn');
+        buttons.forEach((b, idx) => {
+            if(idx === setNumber) b.classList.add('active');
+            else b.classList.remove('active');
+        });
+
+        window.scrollTo(0, 0);
+        loadSet();
+    }
+
+    // নির্দিষ্ট সেটের প্রশ্ন পর্দায় দেখানোর ফাংশন
+    function loadSet() {
+        const quizDiv = document.getElementById('quiz'); 
+        quizDiv.innerHTML = '';
+        document.getElementById('nextBtn').style.display = 'none';
+      
+        let start = currentSet * perPage; 
+        let end = Math.min(start + perPage, allQuestions.length);
+      
+        // যদি ওই সেটে কোনো প্রশ্নই না থাকে
+        if (start >= allQuestions.length) {
+            quizDiv.innerHTML = `<div class='card' style='text-align:center; color:red;'>এই সেটে এখনও কোনো প্রশ্ন যোগ করা হয়নি!</div>`;
+            document.getElementById('pageInfo').innerText = `Set ${currentSet + 1} (০-০ / ${allQuestions.length})`;
+            return;
+        }
+
+        document.getElementById('pageInfo').innerText = `Set ${currentSet + 1} (${start + 1}-${end} / ${allQuestions.length})`;
+      
+        for (let i = start; i < end; i++) {
+            const q = allQuestions[i]; 
+            const card = document.createElement('div'); 
+            card.className = 'card';
+            card.innerHTML = `<b>${i + 1}. ${q.q}</b>`;
+        
+            q.o.forEach((opt, idx) => {
+                const btn = document.createElement('button'); 
+                btn.className = 'opt';
+                btn.innerText = `${['A', 'B', 'C', 'D'][idx]}. ${opt}`;
+          
+                btn.onclick = () => {
+                    if (card.dataset.done) return; 
+                    card.dataset.done = 1;
+            
+                    if (idx === q.a) {
+                        btn.classList.add('correct'); 
+                        totalScore++;
+                    } else {
+                        btn.classList.add('wrong'); 
+                        card.querySelectorAll('.opt')[q.a].classList.add('correct');
+                    }
+            
+                    totalAnswered++; 
+                    document.getElementById('scoreInfo').innerText = `Score: ${totalScore}/${totalAnswered}`;
+                    
+                    // প্রোগ্রেস বার আপডেট
+                    document.getElementById('bar').style.width = (totalAnswered / allQuestions.length * 100) + '%';
+            
+                    // বর্তমান সেটের সবগুলো উত্তর দেওয়া শেষ হলে
+                    if (document.querySelectorAll('.card[data-done]').length === (end - start)) {
+                        let nextStart = (currentSet + 1) * perPage;
+                        if (nextStart < allQuestions.length) {
+                            document.getElementById('nextBtn').style.display = 'block';
+                        } else {
+                            document.getElementById('nextBtn').style.display = 'none';
+                            quizDiv.innerHTML += `<div class='card' style='text-align:center; color:green; font-weight:bold;'>🎉 কুইজ সম্পূর্ণ হয়েছে! আপনার মোট স্কোর: ${totalScore}/${allQuestions.length} (${Math.round(totalScore/allQuestions.length*100)}%)</div>`;
+                        }
+                    }
+                }; 
+                card.appendChild(btn);
+            }); 
+            quizDiv.appendChild(card);
+        }
+    }
+
+    // পরের সেটে যাওয়ার ফাংশন
+    function nextSet() {
+        currentSet++; 
+        changeSet(currentSet);
+    }
+
+    // প্রথমবার পেজ লোড হওয়ার সময় কুইজ চালু করা
+    loadSet();
+  </script>
+</body>
+</html>

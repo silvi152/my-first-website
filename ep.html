@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Hub: Vocabulary & Grammar</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #2563eb;
+            --success-color: #16a34a;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 30px 20px;
+            line-height: 1.5;
+        }
+
+        h1.main-title {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .dashboard-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Top Module Navigation */
+        .module-tab-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .module-btn {
+            flex: 1;
+            max-width: 200px;
+            padding: 10px 16px;
+            font-size: 15px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: white;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .module-btn.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Main Display Card */
+        .section-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            min-height: 50vh;
+        }
+
+        /* Sub-Category Filter Buttons */
+        .category-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .cat-btn {
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .cat-btn:hover {
+            background-color: #e2e8f0;
+        }
+
+        .cat-btn.active {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: white;
+        }
+
+        /* Vocabulary Layout Design */
+        .vocab-item-box {
+            background: #ffffff;
+            padding: 18px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .vocab-item-box b {
+            font-size: 17px;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .vocab-item-box .ans {
+            color: var(--success-color);
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .vocab-item-box .details {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        .vocab-item-box .example {
+            font-size: 13.5px;
+            color: #334155;
+            font-style: italic;
+            border-top: 1px dashed #f1f5f9;
+            padding-top: 6px;
+            margin-top: 6px;
+        }
+
+        /* আলাদা আলাদা গ্রামার কার্ড ডিজাইন */
+        .grammar-rule-box {
+            background: #fcfdfe;
+            padding: 24px;
+            margin-bottom: 35px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .grammar-rule-box h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .grammar-rule-box .focus-text {
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 18px;
+            display: block;
+        }
+
+        .grammar-rule-box p {
+            font-size: 15px;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+
+        .grammar-rule-box ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .grammar-rule-box li {
+            font-size: 15px;
+            margin-bottom: 6px;
+            color: var(--text-color);
+        }
+
+        .grammar-rule-box .code-block {
+            background-color: #f8fafc;
+            border-left: 3px solid #cbd5e1;
+            padding: 12px 16px;
+            margin: 12px 0;
+            font-family: inherit;
+            border-radius: 4px;
+        }
+
+        .grammar-rule-box .wrong-block {
+            color: #b91c1c;
+            margin-bottom: 4px;
+        }
+
+        .grammar-rule-box .correct-block {
+            color: #15803d;
+            font-weight: 500;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="main-title">Self-Preparation Dashboard</h1>
+
+    <div class="dashboard-container">
+        
+        <div class="module-tab-container">
+            <button class="module-btn active" id="btn-vocab" onclick="switchModule('vocab')">Vocabulary</button>
+            <button class="module-btn" id="btn-grammar" onclick="switchModule('grammar')">Grammar Rules</button>
+        </div>
+        
+        <div class="section-card">
+            
+            <div id="vocab-section">
+                <div class="category-container" id="categories-list"></div>
+                <div id="vocab-display-container"></div>
+            </div>
+
+            <div id="grammar-section" class="hidden">
+                <div id="grammar-display-container"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+ <script>
+    // ১. ক্যাটাগরি লিস্ট
+    const cats = ["All", "Education", "Environment", "Technology", "Health", "Society", "Work", "Crime", "Government", "Culture", "Economy", "Media", "Global issues", "Science", "Arts", "Grammar & Collocation"];
+    let activeVocabCat = "All";
+    let currentModule = "vocab"; 
+
+    
+    // ২. ভোকাবুলারি ডেটাসেট
+    const vocabData = [        
+ // Education Category
+    {w:"curriculum",c:"Education",m:"course programme",s:"syllabus",a:"extracurricular",e:"Curriculum must be updated."},
+    {w:"literacy",c:"Education",m:"ability to read/write",s:"education",a:"illiteracy",e:"Literacy rate is rising."},
+    {w:"pedagogy",c:"Education",m:"method of teaching",s:"instruction",a:"ignorance",e:"Modern pedagogy is student-centered."},
+    {w:"enrollment",c:"Education",m:"act of joining course",s:"admission",a:"withdrawal",e:"Enrollment is increasing."},
+    {w:"plagiarism",c:"Education",m:"copying other's work",s:"cheating",a:"originality",e:"Plagiarism is prohibited."},
+    {w:"scholarship",c:"Education",m:"financial aid for study",s:"grant",a:"fee",e:"She won a scholarship."},
+    {w:"vocational",c:"Education",m:"job-oriented training",s:"professional",a:"academic",e:"Vocational training is useful."},
+    {w:"academic",c:"Education",m:"related to study",s:"scholarly",a:"non-academic",e:"Academic pressure is high."},
+    {w:"dissertation",c:"Education",m:"long research paper",s:"thesis",a:"",e:"He is writing dissertation."},
+    {w:"qualification",c:"Education",m:"degree or skill",s:"certificate",a:"inability",e:"Qualification is required."},
+    {w:"faculty",c:"Education",m:"teaching staff",s:"staff",a:"students",e:"Faculty is experienced."},
+    {w:"semester",c:"Education",m:"half-year term",s:"term",a:"",e:"Final exam next semester."},
+    {w:"theoretical",c:"Education",m:"based on theory",s:"abstract",a:"practical",e:"Theoretical knowledge not enough."},
+    {w:"assignment",c:"Education",m:"task given",s:"homework",a:"",e:"Submit assignment on time."},
+    {w:"graduate",c:"Education",m:"complete degree",s:"complete",a:"dropout",e:"He graduated in 2024."},
+    {w:"dropout",c:"Education",m:"leaving early",s:"quitter",a:"graduate",e:"Dropout rate alarming."},
+    {w:"tuition",c:"Education",m:"teaching fee",s:"fee",a:"scholarship",e:"Tuition is expensive."},
+    {w:"intensive",c:"Education",m:"thorough and deep",s:"rigorous",a:"superficial",e:"Intensive IELTS course."},
+    {w:"illiteracy",c:"Education",m:"inability to read/write",s:"ignorance",a:"literacy",e:"Illiteracy causes poverty."},
+    {w:"assessment",c:"Education",m:"evaluation",s:"test",a:"",e:"Assessment method is fair."},
+    {w:"comprehension",c:"Education",m:"understanding",s:"understanding",a:"misunderstanding",e:"Reading comprehension is weak."},
+    {w:"cognitive",c:"Education",m:"mental process",s:"mental",a:"physical",e:"Cognitive development is vital."},
+    {w:"proficient",c:"Education",m:"skilled",s:"skilled",a:"unskilled",e:"Proficient in English."},
+    {w:"diligent",c:"Education",m:"hardworking",s:"hardworking",a:"lazy",e:"Diligent student succeeds."},
+    {w:"erudite",c:"Education",m:"knowledgeable",s:"learned",a:"ignorant",e:"Erudite professor teaches."},
+
+    // Environment Category
+    {w:"pollution",c:"Environment",m:"contamination",s:"impurity",a:"purity",e:"Pollution harms health."},
+    {w:"deforestation",c:"Environment",m:"cutting trees large scale",s:"logging",a:"afforestation",e:"Deforestation causes flood."},
+    {w:"biodiversity",c:"Environment",m:"variety of life",s:"ecosystem",a:"",e:"Protect biodiversity."},
+    {w:"renewable",c:"Environment",m:"can be renewed",s:"sustainable",a:"non-renewable",e:"Solar is renewable energy."},
+    {w:"sustainable",c:"Environment",m:"maintainable long term",s:"maintainable",a:"unsustainable",e:"Sustainable development needed."},
+    {w:"carbon footprint",c:"Environment",m:"CO2 amount released",s:"emission",a:"",e:"Reduce carbon footprint."},
+    {w:"greenhouse",c:"Environment",m:"warming effect",s:"warming",a:"",e:"Greenhouse effect causes warming."},
+    {w:"ecosystem",c:"Environment",m:"natural system",s:"environment",a:"",e:"Ecosystem balance is vital."},
+    {w:"contamination",c:"Environment",m:"making impure",s:"pollution",a:"purification",e:"Water contamination dangerous."},
+    {w:"emission",c:"Environment",m:"releasing gas",s:"discharge",a:"absorption",e:"Car emission harmful."},
+    {w:"conservation",c:"Environment",m:"protection",s:"preservation",a:"destruction",e:"Wildlife conservation important."},
+    {w:"endangered",c:"Environment",m:"at risk",s:"threatened",a:"safe",e:"Tiger is endangered."},
+    {w:"habitat",c:"Environment",m:"natural home",s:"home",a:"",e:"Forest is habitat of animals."},
+    {w:"climate change",c:"Environment",m:"weather change",s:"global warming",a:"",e:"Climate change is real."},
+    {w:"recycle",c:"Environment",m:"reuse material",s:"reuse",a:"waste",e:"Recycle plastic bottles."},
+    {w:"toxic",c:"Environment",m:"poisonous",s:"poisonous",a:"safe",e:"Toxic waste dangerous."},
+    {w:"drought",c:"Environment",m:"no rain period",s:"dryness",a:"flood",e:"Drought causes famine."},
+    {w:"organic",c:"Environment",m:"natural",s:"natural",a:"chemical",e:"Eat organic food."},
+    {w:"disposable",c:"Environment",m:"throwaway",s:"throwaway",a:"reusable",e:"Avoid disposable plastic."},
+    {w:"extinction",c:"Environment",m:"vanishing of species",s:"vanishing",a:"survival",e:"Extinction of dinosaurs."},
+    {w:"alleviate",c:"Environment",m:"reduce",s:"lessen",a:"worsen",e:"Alleviate pollution."},
+    {w:"detrimental",c:"Environment",m:"harmful",s:"harmful",a:"beneficial",e:"Detrimental to environment."},
+    {w:"mitigate",c:"Environment",m:"reduce severity",s:"lessen",a:"increase",e:"Mitigate climate change."},
+    {w:"catastrophic",c:"Environment",m:"disastrous",s:"disastrous",a:"beneficial",e:"Catastrophic flood hit."},
+    {w:"flora and fauna",c:"Environment",m:"plants and animals",s:"wildlife",a:"",e:"Rich flora and fauna."},
+
+    // Technology Category
+    {w:"innovation",c:"Technology",m:"new idea",s:"invention",a:"tradition",e:"Innovation drives progress."},
+    {w:"artificial intelligence",c:"Technology",m:"machine intelligence",s:"AI",a:"",e:"AI is changing world."},
+    {w:"automation",c:"Technology",m:"machine work",s:"robotics",a:"manual",e:"Automation reduces jobs."},
+    {w:"breakthrough",c:"Technology",m:"major progress",s:"discovery",a:"setback",e:"A breakthrough in medicine."},
+    {w:"digital",c:"Technology",m:"computer-based",s:"electronic",a:"analog",e:"Digital literacy must."},
+    {w:"cyberbullying",c:"Technology",m:"online bullying",s:"harassment",a:"",e:"Cyberbullying affects teens."},
+    {w:"privacy breach",c:"Technology",m:"leaking data",s:"leak",a:"protection",e:"Privacy breach common."},
+    {w:"addiction",c:"Technology",m:"being dependent",s:"dependency",a:"independence",e:"Mobile addiction rising."},
+    {w:"virtual",c:"Technology",m:"not real but appears",s:"simulated",a:"real",e:"Virtual meeting held."},
+    {w:"obsolete",c:"Technology",m:"no longer used",s:"outdated",a:"modern",e:"Typewriter is obsolete."},
+    {w:"cutting-edge",c:"Technology",m:"most advanced",s:"advanced",a:"outdated",e:"Cutting-edge technology."},
+    {w:"revolutionize",c:"Technology",m:"change completely",s:"transform",a:"preserve",e:"Internet revolutionized life."},
+    {w:"gadget",c:"Technology",m:"small device",s:"device",a:"",e:"This gadget is useful."},
+    {w:"accessible",c:"Technology",m:"easy to get",s:"available",a:"inaccessible",e:"Internet is accessible."},
+    {w:"fraudulent",c:"Technology",m:"cheating",s:"fake",a:"genuine",e:"Fraudulent activities online."},
+    {w:"advancement",c:"Technology",m:"progress",s:"improvement",a:"decline",e:"Technological advancement fast."},
+    {w:"interaction",c:"Technology",m:"communication",s:"connection",a:"isolation",e:"Human interaction vital."},
+    {w:"transformation",c:"Technology",m:"complete change",s:"change",a:"stability",e:"Digital transformation."},
+    {w:"infrastructure",c:"Technology",m:"basic system",s:"foundation",a:"",e:"Internet infrastructure weak."},
+    {w:"connectivity",c:"Technology",m:"being connected",s:"connection",a:"disconnection",e:"Connectivity is poor."},
+    {w:"algorithm",c:"Technology",m:"process rule",s:"formula",a:"",e:"Search algorithm works."},
+    {w:"interface",c:"Technology",m:"user platform",s:"platform",a:"",e:"User interface is simple."},
+    {w:"data-driven",c:"Technology",m:"based on data",s:"evidence-based",a:"speculative",e:"Data-driven decision making."},
+
+    // Health Category
+    {w:"obesity",c:"Health",m:"overweight",s:"fatness",a:"fitness",e:"Obesity causes disease."},
+    {w:"sedentary lifestyle",c:"Health",m:"inactive life",s:"inactive",a:"active",e:"Sedentary lifestyle harmful."},
+    {w:"balanced diet",c:"Health",m:"proper food combination",s:"nutritious",a:"junk food",e:"Balanced diet essential."},
+    {w:"malnutrition",c:"Health",m:"lack of nutrition",s:"undernutrition",a:"nutrition",e:"Malnutrition in children."},
+    {w:"immunity",c:"Health",m:"disease resistance",s:"resistance",a:"susceptibility",e:"Strong immunity needed."},
+    {w:"epidemic",c:"Health",m:"widespread disease",s:"outbreak",a:"-",e:"Obesity epidemic rising."},
+    {w:"chronic disease",c:"Health",m:"long-lasting disease",s:"persistent",a:"acute",e:"Diabetes is chronic disease."},
+    {w:"anxiety",c:"Health",m:"worry",s:"stress",a:"calmness",e:"Anxiety affects health."},
+    {w:"lifespan",c:"Health",m:"life duration",s:"lifetime",a:"-",e:"Healthy diet increases lifespan."},
+    {w:"premature",c:"Health",m:"too early",s:"early",a:"mature",e:"Premature death due to smoking."},
+    {w:"nutritious",c:"Health",m:"healthy food",s:"healthy",a:"unhealthy",e:"Nutritious food vital."},
+    {w:"diagnosis",c:"Health",m:"identifying disease",s:"detection",a:"-",e:"Early diagnosis saves life."},
+    {w:"rehabilitation",c:"Health",m:"recovery process",s:"recovery",a:"relapse",e:"Rehabilitation after surgery."},
+    {w:"vaccine",c:"Health",m:"injection for protection",s:"inoculation",a:"-",e:"Vaccine prevents disease."},
+    {w:"pandemic",c:"Health",m:"global epidemic",s:"global outbreak",a:"-",e:"Covid was pandemic."},
+    {w:"mental wellbeing",c:"Health",m:"mental health",s:"mental health",a:"mental illness",e:"Mental wellbeing important."},
+    {w:"counselling",c:"Health",m:"advice session",s:"guidance",a:"-",e:"Counselling helps patients."},
+    {w:"symptom",c:"Health",m:"sign of disease",s:"sign",a:"-",e:"Fever is a symptom."},
+    {w:"contagious",c:"Health",m:"spreading disease",s:"infectious",a:"non-contagious",e:"Flu is contagious."},
+    {w:"hygiene",c:"Health",m:"cleanliness",s:"cleanliness",a:"dirtiness",e:"Maintain hygiene."},
+    {w:"depression",c:"Health",m:"mental low mood",s:"sadness",a:"happiness",e:"Depression is common."},
+    {w:"sedentary",c:"Health",m:"sitting much",s:"inactive",a:"active",e:"Sedentary job causes pain."},
+    {w:"therapy",c:"Health",m:"treatment",s:"treatment",a:"-",e:"Therapy helps recovery."},
+    {w:"outbreak",c:"Health",m:"sudden spread",s:"epidemic",a:"-",e:"Outbreak of virus."},
+    {w:"fitness",c:"Health",m:"physical health",s:"health",a:"illness",e:"Fitness is important."},
+
+    // Society Category
+    {w:"urbanization",c:"Society",m:"city growth",s:"city expansion",a:"ruralization",e:"Urbanization causes pollution."},
+    {w:"nuclear family",c:"Society",m:"small family",s:"small family",a:"extended family",e:"Nuclear family common now."},
+    {w:"upbringing",c:"Society",m:"raising child",s:"raising",a:"-",e:"Good upbringing important."},
+    {w:"adolescence",c:"Society",m:"teenage period",s:"youth",a:"adulthood",e:"Adolescence is critical."},
+    {w:"isolated",c:"Society",m:"alone",s:"lonely",a:"connected",e:"Elderly feel isolated."},
+    {w:"community",c:"Society",m:"group of people",s:"society",a:"individual",e:"Community support needed."},
+    {w:"overcrowding",c:"Society",m:"too many people",s:"congestion",a:"spacious",e:"Overcrowding in Dhaka."},
+    {w:"generation gap",c:"Society",m:"difference between ages",s:"divide",a:"-",e:"Generation gap causes conflict."},
+    {w:"domestic violence",c:"Society",m:"home violence",s:"abuse",a:"-",e:"Domestic violence must stop."},
+    {w:"juvenile",c:"Society",m:"young person",s:"young",a:"adult",e:"Juvenile crime increasing."},
+    {w:"socialization",c:"Society",m:"learning to live with others",s:"interaction",a:"isolation",e:"Socialization important."},
+    {w:"inequality",c:"Society",m:"unfairness",s:"unfairness",a:"equality",e:"Inequality in society."},
+    {w:"cohesive",c:"Society",m:"united",s:"united",a:"divided",e:"Cohesive society needed."},
+    {w:"marginalized",c:"Society",m:"excluded",s:"excluded",a:"included",e:"Marginalized people suffer."},
+    {w:"tradition",c:"Society",m:"old custom",s:"custom",a:"modernity",e:"Tradition is valued."},
+    {w:"modernization",c:"Society",m:"becoming modern",s:"development",a:"tradition",e:"Modernization is rapid."},
+    {w:"elderly",c:"Society",m:"old people",s:"old",a:"young",e:"Care for elderly."},
+    {w:"loneliness",c:"Society",m:"feeling alone",s:"isolation",a:"companionship",e:"Loneliness affects health."},
+    {w:"responsibility",c:"Society",m:"duty",s:"duty",a:"irresponsibility",e:"Take responsibility."},
+    {w:"values",c:"Society",m:"principles",s:"principles",a:"-",e:"Family values important."},
+    {w:"interaction",c:"Society",m:"communication",s:"connection",a:"isolation",e:"Social interaction needed."},
+    {w:"demographic",c:"Society",m:"population group",s:"population",a:"-",e:"Demographic change."},
+    {w:"diversity",c:"Society",m:"variety",s:"variety",a:"uniformity",e:"Cultural diversity."},
+    {w:"inclusion",c:"Society",m:"including all",s:"involvement",a:"exclusion",e:"Social inclusion needed."},
+    {w:"welfare",c:"Society",m:"wellbeing support",s:"wellbeing",a:"neglect",e:"Welfare system."},
+
+    // Work Category
+    {w:"unemployment",c:"Work",m:"joblessness",s:"joblessness",a:"employment",e:"Unemployment rising."},
+    {w:"job satisfaction",c:"Work",m:"happiness at work",s:"contentment",a:"dissatisfaction",e:"Job satisfaction important."},
+    {w:"workload",c:"Work",m:"amount of work",s:"burden",a:"-",e:"Workload is heavy."},
+    {w:"promotion",c:"Work",m:"advancement",s:"advancement",a:"demotion",e:"He got promotion."},
+    {w:"resignation",c:"Work",m:"quitting job",s:"quitting",a:"joining",e:"Resignation letter submitted."},
+    {w:"recruitment",c:"Work",m:"hiring",s:"hiring",a:"dismissal",e:"Recruitment process."},
+    {w:"demanding",c:"Work",m:"needing effort",s:"challenging",a:"easy",e:"Demanding job."},
+    {w:"rewarding",c:"Work",m:"satisfying",s:"satisfying",a:"unrewarding",e:"Rewarding career."},
+    {w:"colleagues",c:"Work",m:"coworkers",s:"coworkers",a:"-",e:"Colleagues are helpful."},
+    {w:"incentives",c:"Work",m:"motivation bonus",s:"bonus",a:"-",e:"Incentives for workers."},
+    {w:"work-life balance",c:"Work",m:"balance work and life",s:"balance",a:"imbalance",e:"Maintain work-life balance."},
+    {w:"overtime",c:"Work",m:"extra work time",s:"extra hours",a:"-",e:"Overtime payment."},
+    {w:"entrepreneurship",c:"Work",m:"starting business",s:"business",a:"employment",e:"Entrepreneurship is risky."},
+    {w:"dedication",c:"Work",m:"commitment",s:"commitment",a:"negligence",e:"Dedication to work."},
+    {w:"redundant",c:"Work",m:"no longer needed",s:"unnecessary",a:"essential",e:"Workers became redundant."},
+    {w:"ambition",c:"Work",m:"strong desire",s:"aspiration",a:"contentment",e:"Ambition drives success."},
+    {w:"corporate",c:"Work",m:"company related",s:"business",a:"-",e:"Corporate culture."},
+    {w:"profession",c:"Work",m:"career",s:"career",a:"hobby",e:"Teaching is profession."},
+    {w:"salary",c:"Work",m:"monthly pay",s:"wage",a:"-",e:"Salary is low."},
+    {w:"workplace",c:"Work",m:"place of work",s:"office",a:"-",e:"Workplace environment."},
+    {w:"deadline",c:"Work",m:"due date",s:"due date",a:"-",e:"Meet deadline."},
+    {w:"performance",c:"Work",m:"work output",s:"output",a:"-",e:"Good performance."},
+    {w:"collaboration",c:"Work",m:"teamwork",s:"teamwork",a:"competition",e:"Collaboration is key."},
+    {w:"remuneration",c:"Work",m:"payment",s:"pay",a:"-",e:"High remuneration."},
+    {w:"competent",c:"Work",m:"capable",s:"capable",a:"incompetent",e:"Competent worker."},
+    {w:"interface",c:"Technology",m:"user platform",s:"platform",a:"-",e:"User interface is simple."},
+    {w:"data-driven",c:"Technology",m:"based on data",s:"evidence-based",a:"-",e:"Data-driven decision."},
+    {w:"upgrade",c:"Technology",m:"improve",s:"improve",a:"downgrade",e:"Upgrade your software."},
+    {w:"technological",c:"Technology",m:"tech-related",s:"technical",a:"-",e:"Technological growth rapid."},
+
+    // Health Category
+    {w:"obesity",c:"Health",m:"overweight",s:"fatness",a:"fitness",e:"Obesity causes disease."},
+    {w:"sedentary lifestyle",c:"Health",m:"inactive life",s:"inactive",a:"active",e:"Sedentary lifestyle harmful."},
+    {w:"balanced diet",c:"Health",m:"proper food combination",s:"nutritious",a:"junk food",e:"Balanced diet essential."},
+    {w:"malnutrition",c:"Health",m:"lack of nutrition",s:"undernutrition",a:"nutrition",e:"Malnutrition in children."},
+    {w:"immunity",c:"Health",m:"disease resistance",s:"resistance",a:"susceptibility",e:"Strong immunity needed."},
+    {w:"epidemic",c:"Health",m:"widespread disease",s:"outbreak",a:"-",e:"Obesity epidemic rising."},
+    {w:"chronic disease",c:"Health",m:"long-lasting disease",s:"persistent",a:"acute",e:"Diabetes is chronic disease."},
+    {w:"anxiety",c:"Health",m:"worry",s:"stress",a:"calmness",e:"Anxiety affects health."},
+    {w:"lifespan",c:"Health",m:"life duration",s:"lifetime",a:"-",e:"Healthy diet increases lifespan."},
+    {w:"premature",c:"Health",m:"too early",s:"early",a:"mature",e:"Premature death due to smoking."},
+    {w:"nutritious",c:"Health",m:"healthy food",s:"healthy",a:"unhealthy",e:"Nutritious food vital."},
+    {w:"diagnosis",c:"Health",m:"identifying disease",s:"detection",a:"-",e:"Early diagnosis saves life."},
+    {w:"rehabilitation",c:"Health",m:"recovery process",s:"recovery",a:"relapse",e:"Rehabilitation after surgery."},
+    {w:"vaccine",c:"Health",m:"injection for protection",s:"inoculation",a:"-",e:"Vaccine prevents disease."},
+    {w:"pandemic",c:"Health",m:"global epidemic",s:"global outbreak",a:"-",e:"Covid was pandemic."},
+    {w:"mental wellbeing",c:"Health",m:"mental health",s:"mental health",a:"mental illness",e:"Mental wellbeing important."},
+    {w:"counselling",c:"Health",m:"advice session",s:"guidance",a:"-",e:"Counselling helps patients."},
+    {w:"symptom",c:"Health",m:"sign of disease",s:"sign",a:"-",e:"Fever is a symptom."},
+    {w:"contagious",c:"Health",m:"spreading disease",s:"infectious",a:"non-contagious",e:"Flu is contagious."},
+    {w:"hygiene",c:"Health",m:"cleanliness",s:"cleanliness",a:"dirtiness",e:"Maintain hygiene."},
+    {w:"depression",c:"Health",m:"mental low mood",s:"sadness",a:"happiness",e:"Depression is common."},
+    {w:"sedentary",c:"Health",m:"sitting much",s:"inactive",a:"active",e:"Sedentary job causes pain."},
+    {w:"therapy",c:"Health",m:"treatment",s:"treatment",a:"-",e:"Therapy helps recovery."},
+    {w:"outbreak",c:"Health",m:"sudden spread",s:"epidemic",a:"-",e:"Outbreak of virus."},
+    {w:"fitness",c:"Health",m:"physical health",s:"health",a:"illness",e:"Fitness is important."},
+
+    // Society Category
+    {w:"urbanization",c:"Society",m:"city growth",s:"city expansion",a:"ruralization",e:"Urbanization causes pollution."},
+    {w:"nuclear family",c:"Society",m:"small family",s:"small family",a:"extended family",e:"Nuclear family common now."},
+    {w:"upbringing",c:"Society",m:"raising child",s:"raising",a:"-",e:"Good upbringing important."},
+    {w:"adolescence",c:"Society",m:"teenage period",s:"youth",a:"adulthood",e:"Adolescence is critical."},
+    {w:"isolated",c:"Society",m:"alone",s:"lonely",a:"connected",e:"Elderly feel isolated."},
+    {w:"community",c:"Society",m:"group of people",s:"society",a:"individual",e:"Community support needed."},
+    {w:"overcrowding",c:"Society",m:"too many people",s:"congestion",a:"spacious",e:"Overcrowding in Dhaka."},
+    {w:"generation gap",c:"Society",m:"difference between ages",s:"divide",a:"-",e:"Generation gap causes conflict."},
+    {w:"domestic violence",c:"Society",m:"home violence",s:"abuse",a:"-",e:"Domestic violence must stop."},
+    {w:"juvenile",c:"Society",m:"young person",s:"young",a:"adult",e:"Juvenile crime increasing."},
+    {w:"socialization",c:"Society",m:"learning to live with others",s:"interaction",a:"isolation",e:"Socialization important."},
+    {w:"inequality",c:"Society",m:"unfairness",s:"unfairness",a:"equality",e:"Inequality in society."},
+    {w:"cohesive",c:"Society",m:"united",s:"united",a:"divided",e:"Cohesive society needed."},
+    {w:"marginalized",c:"Society",m:"excluded",s:"excluded",a:"included",e:"Marginalized people suffer."},
+    {w:"tradition",c:"Society",m:"old custom",s:"custom",a:"modernity",e:"Tradition is valued."},
+    {w:"modernization",c:"Society",m:"becoming modern",s:"development",a:"tradition",e:"Modernization is rapid."},
+    {w:"elderly",c:"Society",m:"old people",s:"old",a:"young",e:"Care for elderly."},
+    {w:"loneliness",c:"Society",m:"feeling alone",s:"isolation",a:"companionship",e:"Loneliness affects health."},
+    {w:"responsibility",c:"Society",m:"duty",s:"duty",a:"irresponsibility",e:"Take responsibility."},
+    {w:"values",c:"Society",m:"principles",s:"principles",a:"-",e:"Family values important."},
+    {w:"interaction",c:"Society",m:"communication",s:"connection",a:"isolation",e:"Social interaction needed."},
+    {w:"demographic",c:"Society",m:"population group",s:"population",a:"-",e:"Demographic change."},
+    {w:"diversity",c:"Society",m:"variety",s:"variety",a:"uniformity",e:"Cultural diversity."},
+    {w:"inclusion",c:"Society",m:"including all",s:"involvement",a:"exclusion",e:"Social inclusion needed."},
+    {w:"welfare",c:"Society",m:"wellbeing support",s:"wellbeing",a:"neglect",e:"Welfare system."},
+
+    // Work Category
+    {w:"unemployment",c:"Work",m:"joblessness",s:"joblessness",a:"employment",e:"Unemployment rising."},
+    {w:"job satisfaction",c:"Work",m:"happiness at work",s:"contentment",a:"dissatisfaction",e:"Job satisfaction important."},
+    {w:"workload",c:"Work",m:"amount of work",s:"burden",a:"-",e:"Workload is heavy."},
+    {w:"promotion",c:"Work",m:"advancement",s:"advancement",a:"demotion",e:"He got promotion."},
+    {w:"resignation",c:"Work",m:"quitting job",s:"quitting",a:"joining",e:"Resignation letter submitted."},
+    {w:"recruitment",c:"Work",m:"hiring",s:"hiring",a:"dismissal",e:"Recruitment process."},
+    {w:"demanding",c:"Work",m:"needing effort",s:"challenging",a:"easy",e:"Demanding job."},
+    {w:"rewarding",c:"Work",m:"satisfying",s:"satisfying",a:"unrewarding",e:"Rewarding career."},
+    {w:"colleagues",c:"Work",m:"coworkers",s:"coworkers",a:"-",e:"Colleagues are helpful."},
+    {w:"incentives",c:"Work",m:"motivation bonus",s:"bonus",a:"-",e:"Incentives for workers."},
+    {w:"work-life balance",c:"Work",m:"balance work and life",s:"balance",a:"imbalance",e:"Maintain work-life balance."},
+    {w:"overtime",c:"Work",m:"extra work time",s:"extra hours",a:"-",e:"Overtime payment."},
+    {w:"entrepreneurship",c:"Work",m:"starting business",s:"business",a:"employment",e:"Entrepreneurship is risky."},
+    {w:"dedication",c:"Work",m:"commitment",s:"commitment",a:"negligence",e:"Dedication to work."},
+    {w:"redundant",c:"Work",m:"no longer needed",s:"unnecessary",a:"essential",e:"Workers became redundant."},
+    {w:"ambition",c:"Work",m:"strong desire",s:"aspiration",a:"contentment",e:"Ambition drives success."},
+    {w:"corporate",c:"Work",m:"company related",s:"business",a:"-",e:"Corporate culture."},
+    {w:"profession",c:"Work",m:"career",s:"career",a:"hobby",e:"Teaching is profession."},
+    {w:"salary",c:"Work",m:"monthly pay",s:"wage",a:"-",e:"Salary is low."},
+    {w:"workplace",c:"Work",m:"place of work",s:"office",a:"-",e:"Workplace environment."},
+    {w:"deadline",c:"Work",m:"due date",s:"due date",a:"-",e:"Meet deadline."},
+    {w:"performance",c:"Work",m:"work output",s:"output",a:"-",e:"Good performance."},
+    {w:"collaboration",c:"Work",m:"teamwork",s:"teamwork",a:"competition",e:"Collaboration is key."},
+    {w:"remuneration",c:"Work",m:"payment",s:"pay",a:"-",e:"High remuneration."},
+    {w:"competent",c:"Work",m:"capable",s:"capable",a:"incompetent",e:"Competent worker."},
+
+    // Crime Category
+    {w:"offender",c:"Crime",m:"law breaker",s:"criminal",a:"victim",e:"Offender was arrested."},
+    {w:"rehabilitation",c:"Crime",m:"reform",s:"reform",a:"punishment",e:"Rehabilitation of offenders."},
+    {w:"deterrent",c:"Crime",m:"prevents crime",s:"prevention",a:"encouragement",e:"Prison is deterrent."},
+    {w:"juvenile delinquency",c:"Crime",m:"youth crime",s:"youth crime",a:"-",e:"Juvenile delinquency rising."},
+    {w:"imprisonment",c:"Crime",m:"jail time",s:"jail",a:"freedom",e:"Imprisonment for 5 years."},
+    {w:"victim",c:"Crime",m:"sufferer",s:"sufferer",a:"offender",e:"Victim needs help."},
+    {w:"justice",c:"Crime",m:"fairness",s:"fairness",a:"injustice",e:"Justice must prevail."},
+    {w:"smuggling",c:"Crime",m:"illegal trading",s:"trafficking",a:"legal trade",e:"Drug smuggling crime."},
+    {w:"corruption",c:"Crime",m:"dishonest behavior",s:"dishonesty",a:"honesty",e:"Corruption is everywhere."},
+    {w:"illegal",c:"Crime",m:"against law",s:"unlawful",a:"legal",e:"Illegal activity."},
+    {w:"enforcement",c:"Crime",m:"applying law",s:"implementation",a:"-",e:"Law enforcement strict."},
+    {w:"penalty",c:"Crime",m:"punishment",s:"punishment",a:"reward",e:"Penalty for speeding."},
+    {w:"community service",c:"Crime",m:"unpaid work for community",s:"service",a:"-",e:"Community service ordered."},
+    {w:"evidence",c:"Crime",m:"proof",s:"proof",a:"-",e:"Evidence was found."},
+    {w:"innocent",c:"Crime",m:"not guilty",s:"guiltless",a:"guilty",e:"Innocent person freed."},
+    {w:"guilty",c:"Crime",m:"committed crime",s:"culpable",a:"innocent",e:"He was guilty."},
+    {w:"theft",c:"Crime",m:"stealing",s:"stealing",a:"-",e:"Theft in the shop."},
+    
+    // Government Category
+    {w:"legislation",c:"Government",m:"law making",s:"law",a:"-",e:"New legislation passed."},
+    {w:"funding",c:"Government",m:"money providing",s:"financing",a:"-",e:"Funding for schools."},
+    {w:"censorship",c:"Government",m:"controlling information",s:"control",a:"freedom",e:"Censorship of media."},
+    {w:"bureaucracy",c:"Government",m:"official system",s:"administration",a:"-",e:"Bureaucracy is slow."},
+    {w:"demonstration",c:"Government",m:"protest",s:"protest",a:"-",e:"Peaceful demonstration."},
+    {w:"authority",c:"Government",m:"power",s:"power",a:"powerlessness",e:"Government authority."},
+    {w:"regulation",c:"Government",m:"official rule",s:"rule",a:"deregulation",e:"Regulation needed."},
+    {w:"subsidize",c:"Government",m:"support financially",s:"support",a:"tax",e:"Subsidize farmers."},
+    {w:"tax-payer",c:"Government",m:"who pays tax",s:"citizen",a:"-",e:"Tax-payer money."},
+    {w:"referendum",c:"Government",m:"public vote",s:"vote",a:"-",e:"Referendum held."},
+    {w:"policy",c:"Government",m:"plan of action",s:"plan",a:"-",e:"Government policy changed."},
+    {w:"democratic",c:"Government",m:"elected by people",s:"elected",a:"autocratic",e:"Democratic country."},
+    {w:"campaign",c:"Government",m:"organized action",s:"movement",a:"-",e:"Election campaign."},
+    {w:"infrastructure",c:"Government",m:"basic facilities",s:"facilities",a:"-",e:"Infrastructure development."},
+    {w:"welfare",c:"Government",m:"wellbeing support",s:"wellbeing",a:"neglect",e:"Welfare state."},
+    {w:"governance",c:"Government",m:"management",s:"management",a:"mismanagement",e:"Good governance needed."},
+    {w:"allocation",c:"Government",m:"distribution",s:"distribution",a:"-",e:"Allocation of budget."},
+    {w:"budget",c:"Government",m:"financial plan",s:"plan",a:"-",e:"Annual budget announced."},
+    {w:"public service",c:"Government",m:"service for people",s:"service",a:"-",e:"Public service improved."},
+    {w:"diplomacy",c:"Government",m:"foreign relations",s:"negotiation",a:"-",e:"Diplomacy is important."},
+    {w:"accountability",c:"Government",m:"responsibility",s:"responsibility",a:"unaccountability",e:"Accountability of leaders."},
+    {w:"minister",c:"Government",m:"government official",s:"official",a:"-",e:"Minister visited."},
+    {w:"election",c:"Government",m:"voting",s:"voting",a:"-",e:"Election held."},
+    {w:"constitution",c:"Government",m:"legal framework",s:"law",a:"-",e:"Constitution of country."},
+    {w:"reform",c:"Government",m:"improvement",s:"improvement",a:"decline",e:"Reform needed."},
+
+    // Culture Category
+    {w:"heritage",c:"Culture",m:"tradition legacy",s:"tradition",a:"-",e:"Cultural heritage preserved."},
+    {w:"preservation",c:"Culture",m:"keeping safe",s:"conservation",a:"destruction",e:"Preservation of culture."},
+    {w:"diversity",c:"Culture",m:"variety",s:"variety",a:"uniformity",e:"Cultural diversity rich."},
+    {w:"globalization",c:"Culture",m:"worldwide connection",s:"internationalization",a:"localization",e:"Globalization affects culture."},
+    {w:"ritual",c:"Culture",m:"ceremony",s:"ceremony",a:"-",e:"Traditional ritual."},
+    {w:"ethnicity",c:"Culture",m:"cultural group",s:"culture",a:"-",e:"Different ethnicity live."},
+    {w:"multicultural",c:"Culture",m:"many cultures",s:"diverse",a:"unicultural",e:"Multicultural society."},
+    {w:"assimilation",c:"Culture",m:"becoming similar",s:"integration",a:"separation",e:"Cultural assimilation."},
+    {w:"antique",c:"Culture",m:"old valuable",s:"old",a:"modern",e:"Antique monument."},
+    {w:"monument",c:"Culture",m:"historical structure",s:"memorial",a:"-",e:"Ancient monument."},
+    {w:"identity",c:"Culture",m:"who you are",s:"self",a:"-",e:"Cultural identity important."},
+    {w:"integration",c:"Culture",m:"combining",s:"combining",a:"separation",e:"Social integration."},
+    {w:"migration",c:"Culture",m:"moving",s:"movement",a:"-",e:"Migration for work."},
+    {w:"indigenous",c:"Culture",m:"native",s:"native",a:"foreign",e:"Indigenous people."},
+    {w:"dominant",c:"Culture",m:"most powerful",s:"powerful",a:"weak",e:"Dominant culture."},
+    {w:"custom",c:"Culture",m:"tradition",s:"tradition",a:"modernity",e:"Local custom."},
+    {w:"folklore",c:"Culture",m:"traditional stories",s:"myth",a:"-",e:"Folklore is interesting."},
+    {w:"language",c:"Culture",m:"communication system",s:"tongue",a:"-",e:"Language barrier."},
+    {w:"cuisine",c:"Culture",m:"food style",s:"food",a:"-",e:"Bengali cuisine tasty."},
+    {w:"ceremony",c:"Culture",m:"formal event",s:"ritual",a:"-",e:"Wedding ceremony."},
+    {w:"appreciation",c:"Culture",m:"recognition",s:"recognition",a:"ignorance",e:"Cultural appreciation."},
+    {w:"influence",c:"Culture",m:"effect",s:"effect",a:"-",e:"Western influence."},
+    {w:"adaptation",c:"Culture",m:"adjustment",s:"adjustment",a:"-",e:"Cultural adaptation."},
+    {w:"westernization",c:"Culture",m:"adopting west",s:"modernization",a:"-",e:"Westernization growing."},
+    {w:"extinction",c:"Culture",m:"disappearing",s:"loss",a:"survival",e:"Culture extinction fear."},
+
+    //Economy aro add krte hobe
+    {w:"stability",c:"Economy",m:"steady condition",s:"steadiness",a:"instability",e:"Economic stability needed."},
+    {w:"enterprise",c:"Economy",m:"business",s:"business",a:"-",e:"Private enterprise."},
+    {w:"commerce",c:"Economy",m:"trade",s:"trade",a:"-",e:"E-commerce growing."},
+
+    
+    // Media & Communication Category
+    {w:"propaganda",c:"Media",m:"biased information",s:"indoctrination",a:"truth",e:"Wartime propaganda misleads citizens."},
+    {w:"sensationalism",c:"Media",m:"exaggerated news",s:"hyperbole",a:"objectivity",e:"Tabloids rely on sensationalism for views."},
+    {w:"ubiquitous",c:"Media",m:"present everywhere",s:"omnipresent",a:"rare",e:"Social media has become ubiquitous nowadays."},
+    {w:"mainstream",c:"Media",m:"widely accepted",s:"conventional",a:"alternative",e:"Mainstream journalism faces trust issues."},
+    {w:"infringe",c:"Media",m:"violate a right",s:"encroach",a:"comply",e:"Copyright laws prevent people to infringe content."},
+    {w:"disseminate",c:"Media",m:"spread widely",s:"broadcast",a:"conceal",e:"The internet helps to disseminate data fast."},
+    {w:"manipulate",c:"Media",m:"control cleverly",s:"influence",a:"leave alone",e:"Algorithms manipulate user feed content."},
+    {w:"distortion",c:"Media",m:"misrepresentation",s:"falsification",a:"accuracy",e:"The story was a total distortion of facts."},
+    {w:"impartial",c:"Media",m:"unbiased",s:"neutral",a:"biased",e:"A journalist must remain completely impartial."},
+    {w:"scrutiny",c:"Media",m:"critical observation",s:"inspection",a:"neglect",e:"Public figures are under media scrutiny."},
+    {w:"credibility",c:"Media",m:"trustworthiness",s:"reliability",a:"dishonesty",e:"Fake news destroys media credibility."},
+    {w:"persuasive",c:"Media",m:"convincing",s:"influential",a:"weak",e:"Advertisements use persuasive language."},
+    {w:"bias",c:"Media",m:"prejudice",s:"partiality",a:"fairness",e:"The channel showed political bias."},
+    {w:"prominent",c:"Media",m:"important or famous",s:"noticeable",a:"obscure",e:"The story was on the prominent page."},
+    {w:"censor",c:"Media",m:"suppress unacceptable parts",s:"redact",a:"release",e:"The government decided to censor the film."},
+    {w:"monopolize",c:"Media",m:"dominate market",s:"control",a:"share",e:"Tech giants monopolize online advertising."},
+    {w:"hype",c:"Media",m:"extravagant publicity",s:"promotion",a:"understatement",e:"The new smartphone did not live up to the hype."},
+    {w:"discourse",c:"Media",m:"written or spoken debate",s:"discussion",a:"silence",e:"Healthy public discourse is vital for safety."},
+    {w:"coverage",c:"Media",m:"reporting of news",s:"reporting",a:"ignorance",e:"Live coverage of the event started."},
+    {w:"endorse",c:"Media",m:"declare public approval",s:"support",a:"oppose",e:"Celebrities endorse lifestyle products."},
+    {w:"anonymous",c:"Media",m:"not identified by name",s:"unnamed",a:"known",e:"An anonymous source leaked the data."},
+    {w:"slander",c:"Media",m:"false spoken statement",s:"defamation",a:"praise",e:"He sued the network for slander."},
+    {w:"tabloid",c:"Media",m:"popular sensational newspaper",s:"yellow journalism",a:"broadsheet",e:"Tabloid headlines are often shocking."},
+    {w:"influential",c:"Media",m:"having great impact",s:"powerful",a:"insignificant",e:"An influential editorial changed minds."},
+    {w:"misinformation",c:"Media",m:"false information",s:"untruths",a:"fact",e:"Misinformation spreads fast on chat apps."},
+
+    // Global Issues Category
+    {w:"globalization",c:"Global Issues",m:"worldwide integration",s:"internationalization",a:"isolationism",e:"Globalization connects local markets."},
+    {w:"poverty",c:"Global Issues",m:"state of being poor",s:"penury",a:"wealth",e:"Global programs aim to eradicate poverty."},
+    {w:"depletion",c:"Global Issues",m:"reduction in number",s:"exhaustion",a:"abundance",e:"Ozone depletion causes warming risks."},
+    {w:"sustainability",c:"Global Issues",m:"avoiding resource depletion",s:"maintainability",a:"wastefulness",e:"Green energy supports climate sustainability."},
+    {w:"famine",c:"Global Issues",m:"extreme scarcity of food",s:"starvation",a:"plenty",e:"Drought triggered a severe regional famine."},
+    {w:"migration",c:"Global Issues",m:"movement of people",s:"relocation",a:"staying",e:"Economic crisis drives rural-urban migration."},
+    {w:"refugee",c:"Global Issues",m:"displaced person",s:"asylum seeker",a:"citizen",e:"The camp provides shelter for every refugee."},
+    {w:"exploit",c:"Global Issues",m:"make unfair use of",s:"utilize",a:"protect",e:"Corporations must not exploit child labor."},
+    {w:"scarcity",c:"Global Issues",m:"short supply",s:"shortage",a:"surplus",e:"Water scarcity plagues desert nations."},
+    {w:"malnutrition",c:"Global Issues",m:"lack of proper nutrition",s:"undernourishment",a:"health",e:"Malnutrition affects underdeveloped zones."},
+    {w:"sanction",c:"Global Issues",m:"commercial penalty",s:"restriction",a:"reward",e:"Trade sanction limits weapon imports."},
+    {w:"humanitarian",c:"Global Issues",m:"seeking human welfare",s:"charitable",a:"selfish",e:"Humanitarian aid reached the war zone."},
+    {w:"diplomacy",c:"Global Issues",m:"managing international relations",s:"negotiation",a:"hostility",e:"Peace was achieved through smart diplomacy."},
+    {w:"disparity",c:"Global Issues",m:"great difference",s:"inequality",a:"equality",e:"Economic disparity creates social unrest."},
+    {w:"biodiversity",c:"Global Issues",m:"variety of plant/animal life",s:"ecosystem",a:"uniformity",e:"Deforestation threatens unique biodiversity."},
+    {w:"emission",c:"Global Issues",m:"production and discharge of gas",s:"radiation",a:"absorption",e:"Factory emission pollutes local air."},
+    {w:"overpopulation",c:"Global Issues",m:"excessive population",s:"congestion",a:"underpopulation",e:"Overpopulation strains finite resources."},
+    {w:"degradation",c:"Global Issues",m:"worsening of condition",s:"deterioration",a:"improvement",e:"Soil degradation affects crop yields."},
+    {w:"conflict",c:"Global Issues",m:"serious disagreement",s:"dispute",a:"harmony",e:"Territorial conflict caused a brief war."},
+    {w:"tolerance",c:"Global Issues",m:"allow existence of opinions",s:"patience",a:"prejudice",e:"Cultural tolerance fosters global peace."},
+    {w:"insurgency",c:"Global Issues",m:"active revolt",s:"rebellion",a:"obedience",e:"Military forces stopped the local insurgency."},
+    {w:"asylum",c:"Global Issues",m:"political protection",s:"sanctuary",a:"eviction",e:"The defector requested political asylum."},
+    {w:"crisis",c:"Global Issues",m:"time of intense difficulty",s:"emergency",a:"calm",e:"The financial crisis closed local banks."},
+    {w:"epidemic",c:"Global Issues",m:"widespread infectious disease",s:"outbreak",a:"endemic",e:"The virus created a regional health epidemic."},
+    {w:"recession",c:"Global Issues",m:"temporary economic decline",s:"slump",a:"boom",e:"The pandemic caused a global recession."},
+
+    // Science & Research Category
+    {w:"hypothesis",c:"Science",m:"proposed explanation",s:"theory",a:"fact",e:"Scientists tested the initial hypothesis."},
+    {w:"empirical",c:"Science",m:"verifiable by observation",s:"experimental",a:"theoretical",e:"They gathered empirical evidence first."},
+    {w:"methodology",c:"Science",m:"system of methods",s:"procedure",a:"chaos",e:"The paper explains the test methodology."},
+    {w:"analysis",c:"Science",m:"detailed examination",s:"scrutiny",a:"synthesis",e:"Data analysis revealed strange patterns."},
+    {w:"innovation",c:"Science",m:"new method or idea",s:"novelty",a:"stagnation",e:"Medical innovation saves lives daily."},
+    {w:"profound",c:"Science",m:"very great or intense",s:"deep",a:"superficial",e:"The discovery had a profound impact."},
+    {w:"corroborate",c:"Science",m:"confirm or support",s:"verify",a:"contradict",e:"New evidence helped to corroborate reports."},
+    {w:"anomaly",c:"Science",m:"deviaion from standard",s:"oddity",a:"normality",e:"A thermal anomaly was found in space."},
+    {w:"catalyst",c:"Science",m:"substance accelerating reaction",s:"stimulus",a:"inhibitor",e:"Enzymes act as a biological catalyst."},
+    {w:"synthesize",c:"Science",m:"combine elements into whole",s:"amalgamate",a:"separate",e:"Plants synthesize nutrients via sunlight."},
+    {w:"evolution",c:"Science",m:"gradual development",s:"adaptation",a:"regression",e:"Darwin mapped the evolution of birds."},
+    {w:"genetics",c:"Science",m:"study of heredity",s:"DNA science",a:"-",e:"Genetics explains hereditary diseases."},
+    {w:"mutation",c:"Science",m:"alteration in genetic structure",s:"variation",a:"stability",e:"Radiation caused cell mutation."},
+    {w:"quantum",c:"Science",m:"discrete quantity of energy",s:"particle",a:"continuous",e:"Quantum physics studies atoms."},
+    {w:"velocity",c:"Science",m:"speed in a given direction",s:"pace",a:"immobility",e:"The rocket reached escape velocity fast."},
+    {w:"conduct",c:"Science",m:"organize and carry out",s:"execute",a:"neglect",e:"They will conduct a lab experiment."},
+    {w:"variable",c:"Science",m:"changeable factor",s:"element",a:"constant",e:"Temperature is an independent variable."},
+    {w:"replicate",c:"Science",m:"make an exact copy of",s:"duplicate",a:"originate",e:"Other labs could not replicate results."},
+    {w:"criteria",c:"Science",m:"principles for evaluation",s:"standards",a:"guesswork",e:"The study fits strict research criteria."},
+    {w:"extract",c:"Science",m:"remove or take out",s:"isolate",a:"insert",e:"They managed to extract plant essence."},
+    {w:"parameter",c:"Science",m:"numerical boundary factor",s:"limit",a:"infinity",e:"The data fits inside safe parameters."},
+    {w:"validity",c:"Science",m:"logical soundness",s:"authenticity",a:"falsity",e:"Peer reviews checked the test validity."},
+    {w:"specimen",c:"Science",m:"individual item for display",s:"sample",a:"whole",e:"The biologist collected a rock specimen."},
+    {w:"threshold",c:"Science",m:"magnitude level to cross",s:"boundary",a:"center",e:"The noise crossed human hearing threshold."},
+    {w:"apparatus",c:"Science",m:"technical equipment pieces",s:"gear",a:"-",e:"Laboratory apparatus must be cleaned daily."},
+
+    // Arts & Literature Category
+    {w:"aesthetic",c:"Arts",m:"appreciation of beauty",s:"artistic",a:"unattractive",e:"The building has clean aesthetic lines."},
+    {w:"genre",c:"Arts",m:"category of artistic composition",s:"style",a:"-",e:"Sci-fi is his favorite literary genre."},
+    {w:"metaphor",c:"Arts",m:"symbolic comparison",s:"analogy",a:"literalism",e:"Her heart is gold is a metaphor."},
+    {w:"critique",c:"Arts",m:"detailed assessment",s:"review",a:"praise",e:"The critic wrote a harsh critique."},
+    {w:"depict",c:"Arts",m:"show or represent by drawing",s:"portray",a:"hide",e:"Paintings depict ancient battle scenes."},
+    {w:"avant-garde",c:"Arts",m:"favoring new experimental ideas",s:"innovative",a:"traditional",e:"The artist creates avant-garde sculpture."},
+    {w:"narrative",c:"Arts",m:"spoken or written account",s:"story",a:"bulletin",e:"The novel has a non-linear narrative."},
+    {w:"prose",c:"Arts",m:"ordinary written language",s:"speech",a:"poetry",e:"His prose style is direct and clear."},
+    {w:"evocative",c:"Arts",m:"bringing strong images to mind",s:"reminiscent",a:"uninspiring",e:"The music was highly evocative of spring."},
+    {w:"symbolism",c:"Arts",m:"use of symbols to represent ideas",s:"imagery",a:"literal",e:"The poem uses white birds as symbolism."},
+    {w:"canvas",c:"Arts",m:"heavy woven fabric for painting",s:"board",a:"-",e:"He splattered red paint on a blank canvas."},
+    {w:"sculpture",c:"Arts",m:"three-dimensional art piece",s:"statue",a:"painting",e:"Michelangelo carved a marble sculpture."},
+    {w:"masterpiece",c:"Arts",m:"work of outstanding skill",s:"magnum opus",a:"failure",e:"The Mona Lisa is a recognized masterpiece."},
+    {w:"abstract",c:"Arts",m:"not representing external reality",s:"conceptual",a:"realistic",e:"She prefers abstract expressionist painting."},
+    {w:"patronage",c:"Arts",m:"financial support given by patron",s:"sponsorship",a:"opposition",e:"Royal patronage funded classic theater acts."},
+    {w:"orchestra",c:"Arts",m:"large classical musicians group",s:"ensemble",a:"soloist",e:"The symphony orchestra tuned their gears."},
+    {w:"rhythm",c:"Arts",m:"strong regular repeated pattern",s:"beat",a:"arrhythmia",e:"The drums played a rhythmic tribal pulse."},
+    {w:"protagonist",c:"Arts",m:"leading character in drama",s:"hero",a:"antagonist",e:"The protagonist dies at the drama end."},
+    {w:"antagonist",c:"Arts",m:"active adversary or opponent",s:"villain",a:"protagonist",e:"The antagonist plotted against the kingdom."},
+    {w:"epic",c:"Arts",m:"long poem narrating heroic deeds",s:"saga",a:"short story",e:"The Odyssey is an ancient epic poem."},
+    {w:"poetic",c:"Arts",m:"having beautiful imaginative quality",s:"lyrical",a:"prosaic",e:"Her description of hills was poetic."},
+    {w:"mural",c:"Arts",m:"artwork applied directly to walls",s:"fresco",a:"-",e:"The street crew painted a vibrant wall mural."},
+    {w:"exhibition",c:"Arts",m:"public display of art items",s:"show",a:"concealment",e:"The modern art exhibition begins tomorrow."},
+    {w:"melodrama",c:"Arts",m:"sensational dramatic piece",s:"tragedy",a:"comedy",e:"The theater play was full of domestic melodrama."},
+    {w:"literary",c:"Arts",m:"concerning writing or books",s:"scholarly",a:"illiterate",e:"She won a prestigious literary award."},
+// Collocations & Grammar Rules Category
+    {w:"adhere to",c:"Grammar & Collocation",m:"rules মেনে চলা (Verb + Prep)",s:"comply with",a:"flout",e:"Students must adhere to the university regulations."},
+    {w:"cope with",c:"Grammar & Collocation",m:"মানিয়ে নেওয়া/মোকাবিলা করা (Verb + Prep)",s:"manage",a:"succumb to",e:"Modern students have to cope with academic pressure."},
+    {w:"contribute to",c:"Grammar & Collocation",m:"অবদান রাখা (Verb + Prep)",s:"lead to",a:"detract from",e:"Vocational training contributes to economic growth."},
+    {w:"depend on",c:"Grammar & Collocation",m:"নির্ভর করা (Verb + Prep)",s:"rely on",a:"",e:"Academic success depends on effective pedagogy."},
+    {w:"attribute to",c:"Grammar & Collocation",m:"কারণ হিসেবে গণ্য করা (Verb + Prep)",s:"credit to",a:"",e:"His success is attributed to hard work."},
+    {w:"detrimental to",c:"Grammar & Collocation",m:"ক্ষতিকর (Adj + Prep)",s:"harmful to",a:"beneficial to",e:"Plagiarism is detrimental to academic integrity."},
+    {w:"beneficial to",c:"Grammar & Collocation",m:"উপকারী (Adj + Prep)",s:"advantageous",a:"detrimental",e:"Modern pedagogy is beneficial to slow learners."},
+    {w:"essential for",c:"Grammar & Collocation",m:"অপরিহার্য (Adj + Prep)",s:"crucial",a:"optional",e:"Higher literacy is essential for national growth."},
+    {w:"capable of",c:"Grammar & Collocation",m:"সক্ষম (Adj + Prep + V-ing)",s:"able to",a:"incapable",e:"She is capable of writing a great dissertation."},
+    {w:"responsible for",c:"Grammar & Collocation",m:"দায়ী/দায়িত্বশীল (Adj + Prep)",s:"accountable",a:"exempt",e:"The faculty is responsible for student enrollment."},
+    
+    {w:"acquire knowledge",c:"Grammar & Collocation",m:"জ্ঞান অর্জন করা (Verb + Noun)",s:"learn",a:"forget",e:"Students enroll in universities to acquire knowledge."},
+    {w:"conduct research",c:"Grammar & Collocation",m:"গবেষণা করা (Verb + Noun)",s:"carry out research",a:"",e:"The faculty will conduct research next semester."},
+    {w:"meet requirements",c:"Grammar & Collocation",m:"যোগ্যতা বা শর্ত পূরণ করা (Verb + Noun)",s:"fulfill conditions",a:"fail",e:"You must meet requirements to get a scholarship."},
+    {w:"achieve goals",c:"Grammar & Collocation",m:"লক্ষ্য অর্জন করা (Verb + Noun)",s:"attain objectives",a:"miss",e:"A strict curriculum helps students achieve goals."},
+    {w:"vibrant vocabulary",c:"Grammar & Collocation",m:"সমৃদ্ধ শব্দভাণ্ডার (Adj + Noun)",s:"rich lexicon",a:"poor vocabulary",e:"IELTS candidates need a vibrant vocabulary."},
+    {w:"profound impact",c:"Grammar & Collocation",m:"গভীর প্রভাব (Adj + Noun)",s:"deep influence",a:"mild effect",e:"Online assignments have a profound impact on study."},
+    {w:"academic excellence",c:"Grammar & Collocation",m:"শিক্ষাগত কৃতিত্ব (Adj + Noun)",s:"scholarly success",a:"failure",e:"Scholarships are awarded for academic excellence."},
+    {w:"play a role",c:"Grammar & Collocation",m:"ভূমিকা রাখা (Verb Phrase)",s:"participate",a:"",e:"Pedagogy plays a crucial role in student success."},
+    {w:"raise awareness",c:"Grammar & Collocation",m:"সচেতনতা বাড়ানো (Verb + Noun)",s:"promote awareness",a:"ignore",e:"Schools should raise awareness about plagiarism."},
+    {w:"provide insights",c:"Grammar & Collocation",m:"ধারণা/জ্ঞান দেওয়া (Verb + Noun)",s:"explain",a:"confuse",e:"This dissertation provides insights into education."},
+    
+    {w:"highly beneficial",c:"Grammar & Collocation",m:"অত্যন্ত উপকারী (Adv + Adj)",s:"very useful",a:"useless",e:"Practical qualification is highly beneficial for jobs."},
+    {w:"widely accepted",c:"Grammar & Collocation",m:"সর্বজনস্বীকৃত (Adv + Adj)",s:"universally approved",a:"rejected",e:"Theoretical models are not always widely accepted."},
+    {w:"bitterly disappointed",c:"Grammar & Collocation",m:"তীব্র হতাশ (Adv + Adj)",s:"very sad",a:"delighted",e:"He was bitterly disappointed with his semester result."},
+    {w:"pose a threat",c:"Grammar & Collocation",m:"হুমকি সৃষ্টি করা (Verb + Noun)",s:"endanger",a:"protect",e:"Illiteracy poses a threat to development."},
+    {w:"bridge the gap",c:"Grammar & Collocation",m:"পার্থক্য বা দূরত্ব কমানো (Idiomatic Verb)",s:"reconcile",a:"widen gap",e:"Vocational courses bridge the gap in skills."},
+    {w:"stiff competition",c:"Grammar & Collocation",m:"তীব্র প্রতিযোগিতা (Adj + Noun)",s:"fierce rivalry",a:"no competition",e:"There is stiff competition for university enrollment."},
+    {w:"major breakthrough",c:"Grammar & Collocation",m:"বিরাট সাফল্য/আবিষ্কার (Adj + Noun)",s:"great progress",a:"setback",e:"Her dissertation was a major breakthrough in science."},
+    {w:"bear in mind",c:"Grammar & Collocation",m:"মনে রাখা (Verb Phrase)",s:"remember",a:"forget",e:"Bear in mind that submission deadline is tomorrow."},
+    {w:"draw a conclusion",c:"Grammar & Collocation",m:"উপসংহারে আসা (Verb + Noun)",s:"conclude",a:"",e:"It is too early to draw a conclusion about pedagogy."},
+    {w:"broaden horizons",c:"Grammar & Collocation",m:"জ্ঞান বা দৃষ্টিভঙ্গি বাড়ানো (Verb + Noun)",s:"expand knowledge",a:"narrow mind",e:"Academic reading helps to broaden horizons."}
+
+    ];
+
+  // 3. Clean Grammar Dataset
+    
+    // 3. Grammar Dataset
+    const grammarRulesData = [
+        {
+            q: "Complex Sentences Structure",
+            a: "Independent ও Dependent Clause-এর সমন্বয় ও প্রয়োগ",
+            exp: `<p><b>কমপ্লেক্স সেন্টেন্স (Complex Sentence) কী?</b><br>
+                  একটি কমপ্লেক্স সেন্টেন্সে দুটি মূল অংশ থাকে:
+                  <ul>
+                      <li><b>Independent Clause (স্বাধীন অংশ):</b> এই অংশটি একা একটি পূর্ণাঙ্গ বাক্য তৈরি করতে পারে এবং এর নিজস্ব সম্পূর্ণ অর্থ থাকে।</li>
+                      <li><b>Dependent/Subordinate Clause (অধীনস্থ অংশ):</b> এই অংশটি একা কোনো সম্পূর্ণ অর্থ প্রকাশ করতে পারে না। এটি অর্থের জন্য স্বাধীন অংশের ওপর নির্ভর করে এবং এটি সবসময় একটি Subordinating Conjunction (যেমন: Although, While, Since, If, Unless) দিয়ে শুরু হয়।</li>
+                  </ul>
+                  </p>
+                  
+                  <p><b>ব্যবহার ক্ষেত্র এবং উদাহরণ:</b></p>
+                  
+                  <p><b>১. বৈপরীত্য বা বৈসাদৃশ্য প্রকাশে (To Show Contrast)</b><br>
+                  যখন দুটি পরস্পর বিরোধী তথ্য বা ঘটনাকে একটি বাক্যে এনে তাদের মধ্যকার দ্বন্দ্ব ফুটিয়ে তুলতে হয়।<br>
+                  Conjunctions: Although, Even though, Whereas, While<br>
+                  Structure: Although/While + Dependent Clause + , + Independent Clause
+                  <div class="code-block">
+                      <div class="wrong-block">Incorrect: Although technology makes our lives comfortable, but it has some bad effects on health.</div>
+                      <div class="correct-block">Correct: Although advanced technology renders daily human life highly comfortable, it concurrently induces several detrimental effects on physical well-being.</div>
+                  </div>
+                  </p>
+                  
+                  <p><b>২. কারণ এবং ফলাফল দর্শাতে (To Show Cause and Effect)</b><br>
+                  যখন একটি ঘটনা অন্য একটি ঘটনার পেছনের মূল কারণ বা যুক্তি হিসেবে কাজ করে।<br>
+                  Conjunctions: Since, As, Because<br>
+                  Structure: Since/As + Dependent Clause + , + Independent Clause
+                  <div class="code-block">
+                      <div class="wrong-block">Incorrect: Companies fail because they do not change.</div>
+                      <div class="correct-block">Correct: Since the multinational corporation failed to diversify its digital infrastructure during the sudden economic downturn, it inevitably hemorrhaged millions of dollars in potential revenue.</div>
+                  </div>
+                  </p>
+                  
+                  <p><b>৩. শর্ত বা परिस्थिति নির্ধারণে (To Express Conditions)</b><br>
+                  যখন একটি প্রধান কাজ বা ফলাফল পুরোপুরি অন্য একটি ঘটনার ঘটা বা না ঘটার ওপর নির্ভর করে।<br>
+                  Conjunctions: If, Unless, Provided that, As long as
+                  <div class="code-block">
+                      <div class="wrong-block">Incorrect: If government does not stop pollution, the city will destroy.</div>
+                      <div class="correct-block">Correct: Unless the municipal authority immediately implements stringent carbon-emission caps on local factories, the severe atmospheric degradation will reach an irreversible tipping point within the next decade.</div>
+                  </div>
+                  </p>
+                  
+                  <p><b>৪. সময়ের আপেক্ষিকতা প্রকাশে (To Establish Time Relations)</b><br>
+                  যখন একটি মূল ঘটনার সাথে অন্য একটি ঘটনার সময়ের ধারাবাহিকতা বা এককালীনতার সম্পর্ক দেখাতে হয়।<br>
+                  Conjunctions: When, While, Before, After, Until, As soon as, Once
+                  <div class="code-block">
+                      <div class="correct-block">Example: Once the central bank raises the benchmark interest rates to combat skyrocketing inflation, commercial lending institutions will automatically tighten their credit requirements.</div>
+                  </div>
+                  </p>`
+        },
+        {
+            q: "Subordinating Conjunctions Rules",
+            a: "Although, Whereas, Since ব্যবহার করে বাক্য জোড়া লাগানো",
+            exp: `<p><b>নিয়ম ও কমার (,) সঠিক ব্যবহার:</b><br>
+                  ১. লিংকার (Although/Since/If) দিয়ে বাক্য শুরু হলে মাঝে কমা (,) বসানো বাধ্যতামূলক।<br>
+                  ২. লিংকার বাক্যের মাঝখানে বসলে সাধারণত কোনো কমা বসে না।<br>
+                  ৩. একই বাক্যে 'Although' এবং 'But' একসাথে ব্যবহার করা যাবে না।</p>
+                  <div class="code-block">
+                      <div class="wrong-block">Incorrect: Online learning is flexible. But it lacks face-to-face interaction.</div>
+                      <div class="correct-block">Correct: While virtual learning offers unprecedented flexibility to remote students, it undeniably lacks the nuanced value of face-to-face academic interaction.</div>
+                  </div>`
+        },
+        {
+            q: "The Subjunctive Mood",
+            a: "জোরালো পরামর্শ, আদেশ এবং কাল্পনিক পরিস্থিতি প্রকাশের বিশেষ নিয়ম",
+            exp: `<p><b>সাবজাঙ্কティブ মুড কী?</b><br>
+                  যখন আমরা কোনো কিছুর ওপর বিশেষ জোর দিয়ে আদেশ করি, পরামর্শ দিই কিংবা কোনো অবাস্তব ইচ্ছা প্রকাশ করি, তখন এই বিশেষ স্ট্রাকচার ব্যবহার করা হয়।</p>
+                  
+                  <p><b>১. আদেশ ও পরামর্শের ক্ষেত্রে (Formal Demands/Suggestions):</b><br>
+                  বাক্যে demand, insist, recommend, suggest, vital, essential শব্দগুলো থাকলে, 'that'-এর পরের Subject-এর সাথে সবসময় <b>Verb-এর Base Form</b> বসে। Subject থার্ড পারসন (He/She/It) হলেও Verb-এর সাথে s/es বা past tense হবে না।
+                  <div class="code-block">
+                      <div class="wrong-block">Incorrect: The committee insisted that the manager resigns immediately.</div>
+                      <div class="correct-block">Correct: The committee insisted that the manager <u>resign</u> immediately.</div>
+                  </div>
+                  <div class="code-block">
+                      <div class="wrong-block">Incorrect: It is important that he is present at the meeting.</div>
+                      <div class="correct-block">Correct: It is important that he <u>be</u> present at the meeting.</div>
+                  </div>
+                  </p>
+                  
+                  <p><b>২. কাল্পনিক বা অসম্ভব ইচ্ছার ক্ষেত্রে (Unreal Wishes/Hypotheticals):</b><br>
+                  বর্তমান বা ভবিষ্যতের কোনো অসম্ভব কল্পনা প্রকাশ করতে 'If' বা 'Wish'-এর পর Subject যাই হোক না কেন, <b>was-এর পরিবর্তে 'were'</b> ব্যবহার করা হয়।
+                  <div class="code-block">
+                      <div class="wrong-block">Incorrect: If she was the CEO of the company, she would expand the digital market.</div>
+                      <div class="correct-block">Correct: If she <u>were</u> the CEO of the company, she would expand the digital market.</div>
+                  </div>
+                  </p>`
+        }
+    ];
+
+       // --- Dynamic Rendering Logic ---
+    const categoriesList = document.getElementById("categories-list");
+    const vocabDisplayContainer = document.getElementById("vocab-display-container");
+    const grammarDisplayContainer = document.getElementById("grammar-display-container");
+    
+    const vocabSection = document.getElementById("vocab-section");
+    const grammarSection = document.getElementById("grammar-section");
+
+    function switchModule(module) {
+        currentModule = module;
+        document.getElementById("btn-vocab").classList.toggle("active", module === 'vocab');
+        document.getElementById("btn-grammar").classList.toggle("active", module === 'grammar');
+        
+        if (module === 'vocab') {
+            vocabSection.classList.remove("hidden");
+            grammarSection.classList.add("hidden");
+            renderVocabs();
+        } else {
+            vocabSection.classList.add("hidden");
+            grammarSection.classList.remove("hidden");
+            renderGrammarRules();
+        }
+    }
+
+    function renderButtons() {
+        categoriesList.innerHTML = "";
+        cats.forEach(cat => {
+            const btn = document.createElement("button");
+            btn.className = `cat-btn ${activeVocabCat === cat ? 'active' : ''}`;
+            btn.innerText = cat;
+            btn.onclick = () => {
+                activeVocabCat = cat;
+                renderButtons(); 
+                renderVocabs();  
+            };
+            categoriesList.appendChild(btn);
+        });
+    }
+
+    function renderVocabs() {
+        vocabDisplayContainer.innerHTML = "";
+        const filteredData = activeVocabCat === "All" 
+            ? vocabData 
+            : vocabData.filter(item => item.c === activeVocabCat);
+
+        if(filteredData.length === 0) {
+            vocabDisplayContainer.innerHTML = "<p style='color:#64748b; font-style:italic; font-size:14px;'>No words available in this category.</p>";
+            return;
+        }
+
+        filteredData.forEach(i => {
+            const d = document.createElement("div");
+            d.className = "vocab-item-box";
+            d.innerHTML = `
+                <b>${i.w || "-"}</b>
+                <div class="ans">${i.m || "-"}</div>
+                <div class="details"><strong>Synonym:</strong> ${i.s || "N/A"} | <strong>Antonym:</strong> ${i.a || "N/A"}</div>
+                <div class="example">Example: ${i.e || "-"}</div>
+            `;
+            vocabDisplayContainer.appendChild(d);
+        });
+    }
+
+    function renderGrammarRules() {
+        grammarDisplayContainer.innerHTML = "";
+        grammarRulesData.forEach(i => {
+            const gCard = document.createElement("div");
+            gCard.className = "grammar-rule-box";
+            gCard.innerHTML = `
+                <h3>${i.q || "Grammar Rule"}</h3>
+                <span class="focus-text">Focus: ${i.a || "-"}</span>
+                <div>${i.exp || "-"}</div>
+            `;
+            grammarDisplayContainer.appendChild(gCard);
+        });
+    }
+
+    // App Initialization
+    renderButtons();
+    renderVocabs();
+</script>
+</body>
+</html>

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Chemistry Special Quiz</title>
+ <style>
+  body{font-family:Arial, sans-serif; background: #e3f2fd; padding:12px; max-width:620px; margin:auto;}
+  h1{text-align:center; color:#4169E1; margin-bottom: 5px;}
+  
+  /* সেট কন্টেইনার ও বাটনের সুন্দর ডিজাইন */
+  .set-container { background: white; padding: 12px; border-radius: 12px; margin-bottom: 15px; box-shadow: 2 2px 8px rgba(0,0,0,.1); text-align: center; }
+  .set-container p { margin: 0 0 10px 0; font-weight: bold; color: #555; }
+  .btn-group { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .set-btn { 
+  background: #e3f2fd; /* হালকা কমলার বদলে হালকা নীল */
+  color: #0d47a1;     /* লেখার রঙ গাঢ় নীল */
+  border: 1px solid #90caf9; 
+  padding: 8px 12px; 
+  border-radius: 20px; 
+  cursor: pointer; 
+  font-weight: bold; 
+  transition: 0.2s; 
+}
+
+
+  .set-btn.active, .set-btn:hover { background: #4169E1; color: white; border-color: #e65100; }
+  
+  .card{background:white; padding:14px; border-radius:12px; margin:12px 0; box-shadow:6 2px 8px rgba(0,0,0,.1);}
+  button.opt{width:100%; padding:11px; margin:5px 0; border:1px solid #ddd; border-radius:8px; background:#fff3e0; text-align:left; font-size:15px; cursor: pointer; transition: 0.2s;}
+  button.opt:hover{background: #ffe0b2;}
+  button.opt.correct{background:#c8e6c9!important; border-color:green; color: #1b5e20; font-weight: bold;}
+  button.opt.wrong{background:#ffcdd2!important; border-color:red; color: #b71c1c;}
+  
+ #top {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  font-weight: bold; 
+  font-size: 14px;
+  position: sticky; 
+  top: 0; 
+  background: white; /* সাদা ব্যাকগ্রাউন্ড দেওয়া হলো যাতে স্ক্রোল করার সময় নিচের লেখা ভেসে না ওঠে */
+  padding: 12px 15px; /* চারদিকে পর্যাপ্ত জায়গা দেওয়া হলো যেন লেখা বাইরে না যায় */
+  margin: 10px 0;
+  border-radius: 10px; /* স্কোরবোর্ডটিকে একটি সুন্দর আলাদা বক্সে রূপান্তর করা হলো */
+  box-shadow: 0 2px 8px rgba(0,0,0,.1); /* হালকা শ্যাডো দিয়ে সুন্দর লুক দেওয়া হলো */
+  z-index: 100; /* যেন স্ক্রোল করার সময় এটি সবসময় সবার উপরে ভেসে থাকে */
+  color: #2e7d32;
+}
+
+ 
+
+  #barWrap{height:10px; background:#ddd; border-radius:5px; overflow:hidden; margin:5px 0 15px;}
+  #bar{height:100%; background:#e65100; width:0%; transition:0.3s;}
+  #nextBtn{width:100%; padding:14px; background:#e65100; color:white; border:none; border-radius:10px; font-size:18px; margin:15px 0; display:none; cursor: pointer;}
+ </style>
+</head>
+<body>
+   <h1>⚛️ Chemistry Special Quiz</h1>
+   
+   <div class="set-container">
+        <p>আপনার পছন্দের কুইজ সেট সিলেক্ট করুন:</p>
+        <div class="btn-group">
+            <button id="btnSet1" class="set-btn active" onclick="changeSet(0)">সেট 1 (1-15)</button>
+            <button id="btnSet2" class="set-btn" onclick="changeSet(1)">সেট 2 (16-30)</button>
+            <button id="btnSet3" class="set-btn" onclick="changeSet(2)">সেট 3 (31-45)</button>
+            <button id="btnSet4" class="set-btn" onclick="changeSet(3)">সেট 4 (46-60)</button>
+            <button id="btnSet5" class="set-btn" onclick="changeSet(4)">সেট 5 (61-75)</button>
+            <button id="btnSet6" class="set-btn" onclick="changeSet(5)">সেট 6 (76-90)</button>
+            <button id="btnSet7" class="set-btn" onclick="changeSet(6)">সেট 7(91-105)</button>
+          
+            
+        </div>
+   </div>
+   
+   <div id="top"><span id="pageInfo"></span><span id="scoreInfo">Score: 0/0</span></div>
+   <div id="barWrap"><div id="bar"></div></div>
+   <div id="quiz"></div>
+   <button id="nextBtn" onclick="nextSet()">পরের 15 টা ➡️</button>
+
+   <script>
+const allQuestions = [{q:"পানির সংকেত?", o:["H2O2","H2O","HO2","H2"], a:1},
+{q:"pH =?", o:["log[H+]","-log[OH-]","-log[H+]","log[OH-]"], a:2},
+{q:"pH 7 মানে?", o:["Acidic","Neutral","Basic","Strong Acid"], a:1},
+{q:"NaCl ki?", o:["Salt","Acid","Base","Gas"], a:0},
+{q:"Atomic Number =?", o:["Neutron","Electron+Proton","Mass","Proton সংখ্যা"], a:3},
+{q:"Mass Number =?", o:["Proton","Neutron","Proton+Neutron","Electron"], a:2},
+{q:"Isotope মানে?", o:["একই Proton, ভিন্ন Neutron","ভিন্ন Proton","একই Neutron","ভিন্ন Mass"], a:0},
+{q:"সবচেয়ে হালকা মৌল?", o:["He","Li","H","O"], a:2},
+{q:"নিষ্ক্রিয় গ্যাস কোনটি?", o:["O2","He","N2","H2"], a:1},
+{q:"মরিচার সংকেত?", o:["FeO","Fe3O4","Fe2O3.xH2O","Fe"], a:2},
+{q:"চুনের সংকেত CaO, পানিতে দিলে?", o:["CaCO3","CaCl2","Ca(OH)2","CaH2"], a:2},
+{q:"Tollens বিকারক কি?", o:["[Ag(NH3)2]+","Cu2+","Fe3+","Zn2+"], a:0},
+{q:"Tollens কি শনাক্ত করে?", o:["Ketone","Alcohol","Acid","Aldehyde"], a:3},
+{q:"Fehling Solution কি করে?", o:["Ketone শনাক্ত","Alcohol শনাক্ত","Aldehyde কে Oxidize (লাল অধঃক্ষেপ)","Acid শনাক্ত"], a:2},
+{q:"Fehling এ অধঃক্ষেপের রঙ?", o:["নীল","লাল Cu2O","সাদা","কালো"], a:1},
+{q:"Grignard বিকারক কোনটি?", o:["RNa","RLi","R-OH","RMgX"], a:3},
+{q:"Grignard দিয়ে কি তৈরি হয়?", o:["Alcohol","Alkene","Alkane","Acid"], a:0},
+{q:"Lucas বিকারক কি?", o:["Cu + HCl","ZnCl2 + conc HCl","Fe + HCl","Na + HCl"], a:1},
+{q:"Lucas Test কি জন্য?", o:["Aldehyde","Ketone","1°,2°,3° Alcohol শনাক্ত","Acid"], a:2},
+{q:"Lucas এ কোন Alcohol দ্রুত ঘোলা হয়?", o:["1°","2°","সব সমান","3°"], a:3},
+{q:"Iodoform Test কোনটি দেয়?", o:["CH3CH(OH)- বা CH3CO-","-COOH","-CHO","-NH2"], a:0},
+{q:"Iodoform এ হলুদ অধঃক্ষেপ?", o:["AgCl","CHI3","Cu2O","BaSO4"], a:1},
+{q:"Brady's Reagent কি?", o:["Tollens","Fehling","2,4-DNP","Lucas"], a:2},
+{q:"2,4-DNP কি শনাক্ত করে?", o:["Alcohol","Aldehyde/Ketone (C=O)","Acid","Amine"], a:1},
+{q:"Schiff বিকারক কি করে?", o:["Aldehyde গোলাপী করে","Ketone গোলাপী","Alcohol নীল","Acid লাল"], a:0},
+{q:"Bromine Water Test?", o:["Alcohol","Acid","Unsaturation (Alkene/Alkyne) শনাক্ত, বর্ণহীন হয়","Alkane"], a:2},
+{q:"Baeyer Test বিকারক?", o:["Tollens","alkaline KMnO4 (গোলাপী)","Br2 water","Fehling"], a:1},
+{q:"Baeyer Test এ কি হয়?", o:["লাল","নীল","হলুদ","গোলাপী বর্ণহীন + বাদামী MnO2"], a:3},
+{q:"Hinsberg বিকারক?", o:["CHCl3","C6H5SO2Cl","CCl4","PhOH"], a:1},
+{q:"Hinsberg Test কি জন্য?", o:["1°,2°,3° Amine শনাক্ত","Alcohol","Aldehyde","Acid"], a:0},
+{q:"অম্লীয় K2Cr2O7 কি করে?", o:["Reduce করে","कुछ না","Alcohol কে Acid এ Oxidize করে","Base বানায়"], a:2},
+{q:"Na Metal Test কি?", o:["Acid","Ketone","Alkene","Alcohol (-OH) থেকে H2 গ্যাস"], a:3},
+{q:"NaHCO3 Test?", o:["Alcohol","Carboxylic Acid থেকে CO2","Ketone","Aldehyde"], a:1},
+{q:"Ester এর গন্ধ?", o:["ঝাঁঝালো","মিষ্টি ফলের মতো","পচা","গন্ধহীন"], a:1},
+{q:"Vinegar এ কি থাকে?", o:["HCOOH","C2H5OH","H2SO4","CH3COOH"], a:3},
+{q:"Formalin কি?", o:["40% CH3CHO","10% HCHO","40% HCHO","100% HCHO"], a:2},
+{q:"Chloroform সংকেত?", o:["CHCl3","CCl4","CH2Cl2","CH3Cl"], a:0},
+{q:"CCl4 এর ব্যবহার?", o:["জ্বালানী","খাবার","অগ্নি নির্বাপক","ঔষধ"], a:2},
+{q:"pH Scale কে আবিষ্কার?", o:["Lewis","Sorensen","Arrhenius","Bronsted"], a:1},
+{q:"Strong Acid কোনটি?", o:["CH3COOH","H2CO3","HCl","H2O"], a:2},
+{q:"Strong Base?", o:["NaOH","NH4OH","H2O","CH3COOH"], a:0},
+{q:"Buffer কি?", o:["pH বাড়ায়","pH কমায়","pH ধরে রাখে","কিছু না"], a:2},
+{q:"Molar Mass of H2SO4?", o:["49","96","100","98"], a:3},
+{q:"Avogadro Number?", o:["6.02e23","3e8","9.8","1.6e-19"], a:0},
+{q:"1 mole gas STP তে আয়তন?", o:["11.2 L","22.4 L","44.8 L","1 L"], a:1},
+{q:"Oxidation মানে?", o:["ইলেকট্রন ত্যাগ","ইলেকট্রন গ্রহণ","Proton ত্যাগ","কিছু না"], a:0},
+{q:"Reduction মানে?", o:["ইলেকট্রন ত্যাগ","Proton গ্রহণ","কিছু না","ইলেকট্রন গ্রহণ"], a:3},
+{q:"জারণ-বিজারণ একসাথে কি?", o:["Acid-Base","Redox","Precipitation","None"], a:1},
+{q:"লোহায় মরিচা কি?", o:["Reduction","Neutralization","Precipitation","Oxidation"], a:2},
+{q:"Electrolyte কোনটি?", o:["চিনি দ্রবণ","Benzene","NaCl দ্রবণ","Oil"], a:2},
+{q:"pOH + pH =?", o:["7","14","0","1"], a:1},
+{q:"Ksp কি?", o:["Solubility Product","Acid Constant","Base Constant","Rate Constant"], a:0},
+{q:"Le Chatelier নীতি কি নিয়ে?", o:["গতি","তড়িৎ","আলো","সাম্যাবস্থার সরণ"], a:3},
+{q:"Catalyst কি করে?", o:["বাড়ায়","সক্রিয়ন শক্তি কমায়","কিছু না","তাপ বাড়ায়"], a:1},
+{q:"Alkane এর সাধারণ সংকেত?", o:["CnH2n","CnH2n+2","CnH2n-2","CnH2n+1"], a:1},
+{q:"Alkene সংকেত?", o:["CnH2n+2","CnH2n-2","CnH2n","CnH2n+1"], a:2},
+{q:"Alkyne সংকেত?", o:["CnH2n+2","CnH2n","CnH2n-2","CnHn"], a:2},
+{q:"Benzene সংকেত?", o:["C6H12","C6H14","C6H5","C6H6"], a:3},
+{q:"Ethanol সংকেত?", o:["C2H5OH","CH3OH","C3H7OH","CH3COOH"], a:0},
+{q:"Methanol বিষাক্ত কেন?", o:["Formic Acid তৈরি করে, অন্ধত্ব","Ethanol","Acetic Acid","কিছু না"], a:0},
+{q:"গ্লিসারিন সংকেত?", o:["C2H5OH","C3H8O3","C3H6O","C6H12O6"], a:1},
+{q:"সাবান কি?", o:["Acid","Base","Fatty Acid এর Na Salt","Ester"], a:2},
+{q:"Detergent কি?", o:["Acid","Surfactant","Base","Salt"], a:1},
+{q:"Urea সংকেত?", o:["NH3","NH4Cl","CO2","CO(NH2)2"], a:3},
+{q:"Ammonia সংকেত?", o:["NH3","NH4+","N2","NO2"], a:0},
+{q:"Nitric Acid?", o:["HNO2","H2SO4","HNO3","HCl"], a:2},
+{q:"Sulfuric Acid?", o:["H2SO3","H2SO4","H2S","SO2"], a:1},
+{q:"Aqua Regia অনুপাত?", o:["1:1","3:1","1:2","HNO3:HCl = 1:3"], a:3},
+{q:"Aqua Regia কি গলায়?", o:["Fe","Au, Pt","Al","Cu"], a:1},
+{q:"Wurtz Reaction বিকারক?", o:["Na + R-X","Mg + R-X","Zn + R-X","K + R-X"], a:0},
+{q:"Wurtz এ কি তৈরি হয়?", o:["Alkene","Alkane (R-R)","Alkyne","Alcohol"], a:1},
+{q:"Ozonolysis এ Alkene থেকে?", o:["Aldehyde/Ketone","Alcohol","Acid","Alkane"], a:0},
+{q:"Nessler's বিকারক কি?", o:["ZnCl2 + HCl","K2[HgI4] + KOH","AlCl3","CuSO4 + NaOH"], a:1},
+{q:"Nessler's বিকারক কি শনাক্ত করে?", o:["Alcohol","Aldehyde","Ketone","NH4+ / NH3 (বাদামী অধঃক্ষেপ)"], a:3},
+{q:"ZnCl2 + গাঢ় HCl কে কি বলে?", o:["Tollens বিকারক","Lucas বিকারক","Fehling বিকারক","Nessler's বিকারক"], a:1},
+{q:"Lucas Test এ সবচেয়ে দ্রুত ঘোলা হয় কোনটি?", o:["1° Alcohol","2° Alcohol","Methanol","3° Alcohol"], a:3},
+{q:"AlCl3 কোন বিক্রিয়ার অনুঘটক?", o:["Friedel-Crafts Alkylation/Acylation","Esterification","Saponification","Iodoform"], a:0},
+{q:"Benzene + CH3Cl --AlCl3--> কি তৈরি হয়?", o:["Phenol","Toluene (Methyl Benzene)","Aniline","Benzoic Acid"], a:1},
+  {
+    q: "নিচের কোন অরবিটালটির ইলেকট্রন মেঘের ঘনত্ব অক্ষ বরাবর সর্বাধিক এবং এটি ডাম্বেল আকৃতির নয়?",
+    o: ["dx2-y2", "dz2", "dxy", "p_z"],
+    a: 1 // B) dz2 [dz2 এর আকৃতি ডোনাট বা টরাস আকৃতির, এর ইলেকট্রন ঘনত্ব Z অক্ষ বরাবর সর্বাধিক]
+  },
+  {
+    q: "0.05 M H2SO4 দ্রবণের pH এর মান কত?",
+    o: ["1.30", "1.00", "2.00", "0.70"],
+    a: 1 // B) 1.00 [H+ ঘনত্ব = 2 * 0.05 = 0.1 M, pH = -log(0.1) = 1]
+  },
+  {
+    q: "নিচের কোন যৌগটির গলনাঙ্ক ও সমযোজী বৈশিষ্ট্য ফাজানের নীতি (Fajans' Rule) অনুযায়ী সবচেয়ে বেশি?",
+    o: ["NaCl", "MgCl2", "AlCl3", "CCl4"],
+    a: 2 // C) AlCl3 [উচ্চ চার্জ ঘনত্বের কারণে Al3+ এর পোলারন ক্ষমতা সবচেয়ে বেশি, তাই সমযোজী বৈশিষ্ট্য সর্বোচ্চ]
+  },
+  {
+    q: "রক্তের বাফার সিস্টেমের প্রধান উপাদান কোনটি যা শরীরের pH নিয়ন্ত্রণ করে?",
+    o: ["H2CO3 এবং NaHCO3", "CH3COOH এবং CH3COONa", "Na2HPO4 এবং NaH2PO4", "NH4OH এবং NH4Cl"],
+    a: 0 // A) H2CO3 এবং NaHCO3 [কার্বনিক অ্যাসিড-বাইকার্বোনেট বাফার রক্তের প্রধান বাফার]
+  },
+  {
+    q: "Fe2+ আয়নে অমিশ্রিত (Unpaired) ইলেকট্রন সংখ্যা কয়টি?",
+    o: ["6টি", "4টি", "5টি", "0টি"],
+    a: 1 // B) 4টি [Fe2+ এর ইলেকট্রন বিন্যাস 3d6, হুন্ডের নীতি অনুযায়ী অমিশ্রিত ইলেকট্রন ৪টি]
+  },
+  {
+    q: "নিচের কোন জোড়টি পরস্পরের আইসোডায়াফার (Isodiapher)?",
+    o: ["Th-234 এবং U-238", "C-14 এবং N-14", "Ar-40 এবং Ca-40", "Na-23 এবং Mg-24"],
+    a: 0 // A) Th-234 এবং U-238 [উভয়েরই নিউট্রন ও প্রোটনের পার্থক্য (N - Z) সমান]
+  },
+  {
+    q: "একটি প্রথম ক্রমের (First Order) বিক্রিয়ার অর্ধায়ু 20 মিনিট হলে, বিক্রিয়াটি 75% সম্পন্ন হতে কত সময় লাগবে?",
+    o: ["30 মিনিট", "40 মিনিট", "60 মিনিট", "80 মিনিট"],
+    a: 1 // B) 40 মিনিট [75% সম্পন্ন হওয়া মানে দুটি অর্ধায়ু পার হওয়া, তাই 2 * 20 = 40 মিনিট]
+  },
+  {
+    q: "25 ডিগ্রি সেলসিয়াস তাপমাত্রায় AgCl এর দ্রাব্যতা গুণফল (Ksp) 1.6e-10 হলে, এর দ্রাব্যতা (s) কত মোলার?",
+    o: ["1.26e-5", "4.00e-5", "1.60e-5", "8.00e-6"],
+    a: 0 // A) 1.26e-5 [s = √Ksp = √(1.6e-10) ≈ 1.26e-5 M]
+  },
+  {
+    q: "নিচের কোনটি অর্থো-প্যারা নির্দেশক (Ortho-para director) কিন্তু বেনজিন বলয়কে নিষ্ক্রিয় (Deactivating) করে?",
+    o: ["-CH3", "-NH2", "-Cl", "-NO2"],
+    a: 2 // C) -Cl [হ্যালোজেনসমূহ হিলিয়াম ধর্মের কারণে অর্থো-প্যারা নির্দেশক হলেও আবেসী ফলের কারণে বলয় নিষ্ক্রিয়কারী]
+  },
+  {
+    q: "কোন যৌগের কেন্দ্রীয় পরমাণুতে দুটি মুক্তজোড় (Lone pair) এবং দুটি বন্ধনজোড় (Bond pair) ইলেকট্রন থাকে?",
+    o: ["NH3", "CH4", "BF3", "H2O"],
+    a: 3 // D) H2O [অক্সিজেনের ৪টি যোজ্যতা ইলেকট্রনের মধ্যে ২টি বন্ধনে এবং ২টি মুক্তজোড় হিসেবে থাকে]
+  },
+  {
+    q: "STP তে 4.4 গ্রাম CO2 গ্যাসের আয়তন কত লিটার?",
+    o: ["22.4 L", "11.2 L", "2.24 L", "4.4 L"],
+    a: 2 // C) 2.24 L [4.4 গ্রাম CO2 = 0.1 মোল। আয়তন = 0.1 * 22.4 = 2.24 লিটার]
+  },
+  {
+    q: "নিচের কোনটি নিউক্লিওফাইল (Nucleophile) হিসেবে বিক্রিয়া করে না?",
+    o: ["NH3", "H2O", "BF3", "CN-"],
+    a: 2 // C) BF3 [BF3 একটি ইলেকট্রোফাইল কারণ এর কেন্দ্রীয় বোরন পরমাণুর অষ্টক অপূর্ণ]
+  },
+  {
+    q: "ক্রোমিয়াম (Cr) পরমাণুর যোজ্যতা স্তরের সঠিক ইলেকট্রন বিন্যাস কোনটি?",
+    o: ["3d4 4s2", "3d5 4s1", "3d6 4s0", "3d3 4s2"],
+    a: 1 // B) 3d5 4s1 [অর্ধপূর্ণ d-অরবিটালের অতিরিক্ত স্থায়িত্বের কারণে এই ব্যতিক্রম ঘটে]
+  },
+  {
+    q: "নিচের কোন গ্যাসটির ব্যাপন হার (Rate of Diffusion) সবচেয়ে বেশি?",
+    o: ["CO2", "CH4", "NH3", "SO2"],
+    a: 1 // B) CH4 [যার আণবিক ভর যত কম, তার ব্যাপন হার তত বেশি। মিথেনের আণবিক ভর সর্বনিম্ন 16]
+  },
+  {
+    q: "H2O, NH3 এবং CH4 এর বন্ধন কোণের সঠিক ক্রম কোনটি?",
+    o: ["H2O > NH3 > CH4", "CH4 > NH3 > H2O", "NH3 > CH4 > H2O", "সবগুলোর কোণ সমান"],
+    a: 1 // B) CH4 (109.5°) > NH3 (107°) > H2O (104.5°) [মুক্তজোড় ইলেকট্রনের বিকর্ষণ বৃদ্ধির কারণে কোণ কমে]
+  },
+  {
+    q: "নিচের কোনটি শিখা পরীক্ষায় (Flame Test) সোনালী হলুদ বর্ণ প্রদর্শন করে?",
+    o: ["Cu", "Ca", "Na", "K"],
+    a: 2 // C) Na [সোডিয়াম শিখা পরীক্ষায় সোনালী হলুদ শিখা দেয়]
+  },
+  {
+    q: "হেবার বস পদ্ধতিতে অ্যামোনিয়া উৎপাদনের অনুকূল চাপ কত বায়ুমণ্ডলীয় (atm)?",
+    o: ["1 atm", "200 atm", "500 atm", "50 atm"],
+    a: 1 // B) 200 atm [শিল্পোৎপাদনে সাধারণত 200-250 atm চাপ ব্যবহার করা হয়]
+  },
+  {
+    q: "কোন কোয়ান্টাম সংখ্যার সেটটি একটি ইলেকট্রনের জন্য অসম্ভব?",
+    o: ["n=2, l=1, m=0", "n=3, l=2, m=-1", "n=2, l=2, m=1", "n=1, l=0, m=0"],
+    a: 2 // C) n=2 হলে l এর মান কখনো 2 হতে পারে না (l এর মান 0 থেকে n-1 পর্যন্ত)]
+  },
+  {
+    q: "লুকাশ বিকারক ব্যবহার করে নিচের কোন যৌগটিকে এক মুহূর্তে (সর্বাপেক্ষা দ্রুত) ঘোলাটে করা যায়?",
+    o: ["2-Methylpropan-2-ol", "Butan-1-ol", "Ethanol", "Propan-2-ol"],
+    a: 0 // A) 2-Methylpropan-2-ol [এটি একটি 3° অ্যালকোহল, যা লুকাশ বিকারকের সাথে তাৎক্ষণিক অধঃক্ষেপ দেয়]
+  },
+  {
+    q: "পানির অস্থায়ী খরতার (Temporary Hardness) জন্য দায়ী নিচের কোন লবণটি?",
+    o: ["CaSO4", "CaCl2", "Ca(HCO3)2", "MgSO4"],
+    a: 2 // C) Ca(HCO3)2 [ক্যালসিয়াম ও ম্যাগনেসিয়ামের বাইকার্বোনেট লবণ অস্থায়ী খরতা তৈরি করে]
+  },  {
+    q: "নিচের কোন লবণটির জলীয় দ্রবণ ক্ষারীয় (Basic) প্রকৃতি প্রদর্শন করে?",
+    o: ["NaCl", "NH4Cl", "CH3COONa", "FeCl3"],
+    a: 2 // C) CH3COONa [দুর্বল অ্যাসিড ও তীব্র ক্ষারের লবণ হওয়ায় এটি জলীয় দ্রবণে ক্ষারীয় হয়]
+  },
+  {
+    q: "লুইস অ্যাসিড (Lewis Acid) হিসেবে কাজ করে নিচের কোনটি?",
+    o: ["AlCl3", "NH3", "H2O", "Cl-"],
+    a: 0 // A) AlCl3 [এর কেন্দ্রীয় অ্যালুমিনিয়াম পরমাণুর অষ্টক অপূর্ণ থাকায় এটি ইলেকট্রন জোড় গ্রহণ করতে পারে]
+  },
+  {
+    q: "স্থির তাপমাত্রায় বিক্রিয়ার হার ধ্রুবক (Rate Constant) নিচের কোনটির ওপর নির্ভর করে?",
+    o: ["বিক্রিয়কের ঘনমাত্রা", "বিক্রিয়ার সময়", "প্রভাবক বা ক্যাটালিস্ট", "পাত্রের আয়তন"],
+    a: 2 // C) প্রভাবক [প্রভাবক সক্রিয়ণ শক্তি কমিয়ে হার ধ্রুবকের মান পরিবর্তন করে]
+  },
+  {
+    q: "নিচের কোন অণুর দ্বিমেরু ভ্রামক (Dipole Moment) শূন্য?",
+    o: ["H2O", "NH3", "CO2", "HCl"],
+    a: 2 // C) CO2 [এর গঠন সরলরৈখিক হওয়ায় দুই পাশের দ্বিমেরু ভ্রামক একে অপরকে নাকচ করে দেয়]
+  },
+  {
+    q: "কপার (Cu) এর ল্যাটিন নাম কুপ্রাম (Cuprum), এর প্রধান আকরিক চালকোপাইরাইট এর সঠিক সংকেত কোনটি?",
+    o: ["Cu2O", "CuFeS2", "CuCO3", "Cu2S"],
+    a: 1 // B) CuFeS2 [চালকো পাইরাইট বা কপার পাইরাইটস হলো কপারের প্রধান আকরিক]
+  },
+  {
+    q: "কোন তড়িৎদ্বারটির প্রমাণ বিজারণ বিভব (Standard Reduction Potential) এর মান সবচেয়ে কম?",
+    o: ["Li+/Li", "H+/H2", "Cu2+/Cu", "Au3+/Au"],
+    a: 0 // A) Li+/Li [তড়িৎ রাসায়নিক সারিতে লিথিয়াম সবার উপরে, এর বিজারণ বিভব সর্বনিম্ন অর্থাৎ তীব্র বিজারক]
+  },
+  {
+    q: "নিচের কোনটি জ্যামিতিক সমাণুতা (Geometrical Isomerism) প্রদর্শন করে?",
+    o: ["But-1-ene", "But-2-ene", "Propene", "2-Methylpropene"],
+    a: 1 // B) But-2-ene [এর দুই পাশের কার্বনে ভিন্ন গ্রুপ থাকায় এটি সিস-ট্রান্স সমাণুতা দেখায়]
+  },
+  {
+    q: "একটি তেজস্ক্রিয় মৌলের অর্ধায়ু 5 বছর হলে, এর গড় আয়ু (Mean Life) কত বছর?",
+    o: ["3.46 বছর", "7.22 বছর", "5.00 বছর", "10.00 বছর"],
+    a: 1 // B) 7.22 বছর [গড় আয়ু = অর্ধায়ু / 0.693 = 5 / 0.693 ≈ 7.22 বছর]
+  },
+  {
+    q: "নিচের কোন যৌগটি ক্যানিজারো বিক্রিয়া (Cannizzaro Reaction) প্রদর্শন করে?",
+    o: ["CH3CHO", "HCHO", "CH3COCH3", "CH3CH2CHO"],
+    a: 1 // B) HCHO [যেসব অ্যালডিহাইডে আলফা-হাইড্রোজেন থাকে না, তারা ক্যানিজারো বিক্রিয়া দেয়]
+  },
+  {
+    q: "নিচের কোনটির তড়িৎ ঋণাত্মকতা (Electronegativity) পর্যায় সারণিতে সবচেয়ে বেশি?",
+    o: ["F", "Cl", "O", "N"],
+    a: 0 // A) F [ফ্লোরিনের তড়িৎ ঋণাত্মকতা স্কেলে সর্বোচ্চ 4.0]
+  },
+  {
+    q: "কোন আয়নটির পলির বর্জন নীতি অনুযায়ী আকার (Ionic Radius) সবচেয়ে ছোট?",
+    o: ["O2-", "F-", "Na+", "Mg2+"],
+    a: 3 // D) Mg2+ [এরা সবাই সম-ইলেকট্রনীয় (Isoelectronic), কিন্তু ম্যাগনেসিয়ামের প্রোটন সংখ্যা বেশি হওয়ায় আকর্ষণ বেশি এবং আকার ছোট]
+  },
+  {
+    q: "জৈব যৌগে কার্বন-কার্বন একক বন্ধনের (C-C) দৈর্ঘ্য সাধারণত কত ন্যানোমিটার (nm)?",
+    o: ["0.154 nm", "0.134 nm", "0.120 nm", "0.139 nm"],
+    a: 0 // A) 0.154 nm [একক বন্ধন 0.154 nm, দ্বিবন্ধন 0.134 nm, ত্রিবন্ধন 0.120 nm]
+  },
+  {
+    q: "নিচের কোন আয়নটি জলীয় দ্রবণে রঙিন যৌগ গঠন করতে পারে না?",
+    o: ["Fe3+", "Cu2+", "Sc3+", "Cr3+"],
+    a: 2 // C) Sc3+ [Sc3+ এর d-অরবিটালে কোনো ইলেকট্রন নেই (3d0), তাই এটি রঙিন আয়ন তৈরি করে না]
+  },
+  {
+    q: "একটি কাচের পাত্রে হাইড্রোফ্লোরিক অ্যাসিড (HF) রাখা যায় না কেন?",
+    o: ["HF উদ্বায়ী গ্যাস", "HF কাচকে গলিয়ে দ্রবণীয় লবণ তৈরি করে", "HF তীব্র জারক", "HF খুবই মৃদু অ্যাসিড"],
+    a: 1 // B) HF কাচকে গলিয়ে ফেলে [HF কাচের প্রধান উপাদান সিলিকার সাথে বিক্রিয়া করে সিলিকন টেট্রাফ্লোরাইড উৎপন্ন করে]
+  },
+  {
+    q: "নিচের কোন গ্যাসটির জন্য ভ্যান ডার ওয়ালস ধ্রুবক 'a' এর মান সবচেয়ে বেশি (অর্থাৎ সহজে তরল হয়)?",
+    o: ["H2", "He", "NH3", "O2"],
+    a: 2 // C) NH3 [পোলার অণু হওয়ায় এবং হাইড্রোজেন বন্ধন থাকার কারণে অ্যামোনিয়ার আন্তঃআণবিক আকর্ষণ সর্বোচ্চ]
+  },
+  {
+    q: "সবুজ রসায়নের (Green Chemistry) প্রধান লক্ষ্য নিচের কোনটি অর্জন করা?",
+    o: ["উৎপাদন ব্যয় বাড়ানো", "Atom Economy বৃদ্ধি এবং বর্জ্য কমানো", "রাসায়নিক বিক্রিয়া দ্রুত করা", "সব বিক্রিয়া কক্ষ তাপমাত্রায় করা"],
+    a: 1 // B) Atom Economy বৃদ্ধি [১২টি নীতির মূল উদ্দেশ্যই হলো কম বর্জ্য তৈরি করে সর্বোচ্চ পরমাণুর ব্যবহার]
+  },
+  {
+    q: "100 মিলি 0.1 M HCl দ্রবণকে প্রশমিত করতে কত মিলি 0.1 M NaOH দ্রবণ প্রয়োজন?",
+    o: ["50 mL", "100 mL", "200 mL", "10 mL"],
+    a: 1 // B) 100 mL [উভয়ই এক-অম্লীয় ও এক-ক্ষারীয় এবং ঘনমাত্রা সমান হওয়ায় সমান আয়তন লাগবে]
+  },
+  {
+    q: "বেনজিনে নাইট্রেশন বিক্রিয়া ঘটানোর জন্য নিচের কোন মিশ্রণটি ব্যবহার করা হয়?",
+    o: ["গাঢ় HNO3 + গাঢ় H2SO4", "গাঢ় HCl + ZnCl2", "Br2 + FeBr3", "CH3Cl + AlCl3"],
+    a: 0 // A) গাঢ় HNO3 + গাঢ় H2SO4 [এই মিশ্রণ থেকে ইলেকট্রোফাইল NO2+ উৎপন্ন হয়]
+  },
+  {
+    q: "নিচের কোন যৌগটি সিলভার দর্পণ পরীক্ষা (Silver Mirror Test) দেয় না?",
+    o: ["HCHO", "CH3CHO", "CH3COCH3", "C6H5CHO"],
+    a: 2 // C) CH3COCH3 [এটি একটি কিটোন (অ্যাসিটোন), কিটোনসমূহ টলেন বিকারকের সাথে সিলভার দর্পণ দেয় না]
+  },
+  {
+    q: "আদর্শ গ্যাস সমীকরণ PV = nRT নিচের কোন পরিস্থিতিতে বাস্তব গ্যাসের ক্ষেত্রে সবচেয়ে ভালো কাজ করে?",
+    o: ["উচ্চ চাপ ও নিম্ন তাপমাত্রা", "নিম্ন চাপ ও উচ্চ তাপমাত্রা", "উচ্চ চাপ ও উচ্চ তাপমাত্রা", "নিম্ন চাপ ও নিম্ন তাপমাত্রা"],
+    a: 1 // B) নিম্ন চাপ ও উচ্চ তাপমাত্রা [এই অবস্থায় বাস্তব গ্যাসের অণুগুলোর আন্তঃআণবিক আকর্ষণ ও আয়তন নগণ্য হয়ে যায়]
+  },
+
+
+];
+  let currentSet = 0, totalScore = 0, totalAnswered = 0;
+    const perPage = 15;
+
+    // সেট বাটনে ক্লিক করলে কাজ করার ফাংশন
+    function changeSet(setNumber) {
+        currentSet = setNumber;
+        
+        // সব বাটন থেকে active ক্লাস রিমুভ করে নির্দিষ্ট বাটনে অ্যাড করা
+        let buttons = document.querySelectorAll('.set-btn');
+        buttons.forEach((b, idx) => {
+            if(idx === setNumber) b.classList.add('active');
+            else b.classList.remove('active');
+        });
+
+        window.scrollTo(0, 0);
+        loadSet();
+    }
+
+    // নির্দিষ্ট সেটের প্রশ্ন পর্দায় দেখানোর ফাংশন
+    function loadSet() {
+        const quizDiv = document.getElementById('quiz'); 
+        quizDiv.innerHTML = '';
+        document.getElementById('nextBtn').style.display = 'none';
+      
+        let start = currentSet * perPage; 
+        let end = Math.min(start + perPage, allQuestions.length);
+      
+        // যদি ওই সেটে কোনো প্রশ্নই না থাকে
+        if (start >= allQuestions.length) {
+            quizDiv.innerHTML = `<div class='card' style='text-align:center; color:red;'>এই সেটে এখনও কোনো প্রশ্ন যোগ করা হয়নি!</div>`;
+            document.getElementById('pageInfo').innerText = `Set ${currentSet + 1} (০-০ / ${allQuestions.length})`;
+            return;
+        }
+
+        document.getElementById('pageInfo').innerText = `Set ${currentSet + 1} (${start + 1}-${end} / ${allQuestions.length})`;
+      
+        for (let i = start; i < end; i++) {
+            const q = allQuestions[i]; 
+            const card = document.createElement('div'); 
+            card.className = 'card';
+            card.innerHTML = `<b>${i + 1}. ${q.q}</b>`;
+        
+            q.o.forEach((opt, idx) => {
+                const btn = document.createElement('button'); 
+                btn.className = 'opt';
+                btn.innerText = `${['A', 'B', 'C', 'D'][idx]}. ${opt}`;
+          
+                btn.onclick = () => {
+                    if (card.dataset.done) return; 
+                    card.dataset.done = 1;
+            
+                    if (idx === q.a) {
+                        btn.classList.add('correct'); 
+                        totalScore++;
+                    } else {
+                        btn.classList.add('wrong'); 
+                        card.querySelectorAll('.opt')[q.a].classList.add('correct');
+                    }
+            
+                    totalAnswered++; 
+                    document.getElementById('scoreInfo').innerText = `Score: ${totalScore}/${totalAnswered}`;
+                    
+                    // প্রোগ্রেস বার আপডেট
+                    document.getElementById('bar').style.width = (totalAnswered / allQuestions.length * 100) + '%';
+            
+                    // বর্তমান সেটের সবগুলো উত্তর দেওয়া শেষ হলে
+                    if (document.querySelectorAll('.card[data-done]').length === (end - start)) {
+                        let nextStart = (currentSet + 1) * perPage;
+                        if (nextStart < allQuestions.length) {
+                            document.getElementById('nextBtn').style.display = 'block';
+                        } else {
+                            document.getElementById('nextBtn').style.display = 'none';
+                            quizDiv.innerHTML += `<div class='card' style='text-align:center; color:green; font-weight:bold;'>🎉 কুইজ সম্পূর্ণ হয়েছে! আপনার মোট স্কোর: ${totalScore}/${allQuestions.length} (${Math.round(totalScore/allQuestions.length*100)}%)</div>`;
+                        }
+                    }
+                }; 
+                card.appendChild(btn);
+            }); 
+            quizDiv.appendChild(card);
+        }
+    }
+
+    // পরের সেটে যাওয়ার ফাংশন
+    function nextSet() {
+        currentSet++; 
+        changeSet(currentSet);
+    }
+
+    // প্রথমবার পেজ লোড হওয়ার সময় কুইজ চালু করা
+    loadSet();
+  </script>
+</body>
+</html>

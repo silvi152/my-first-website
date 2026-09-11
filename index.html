@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GYANO-X | Home</title>
+    <style>
+        body {
+            font-family: 'SolaimanLipi', Arial, sans-serif;
+            background: #FAEBD7;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            padding-bottom: 80px; /* ফুটারের জন্য স্পেস বৃদ্ধি করা হলো */
+        }
+        header {
+            background: #5f9ea0;
+            color: black;
+            padding: 25px;
+        }
+        .container {
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        button, .btn {
+            background: #1d4ed8;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            transition: all 0.3s ease; /* স্মুথ ট্রানজিশন ইফেক্ট */
+            font-weight: bold;
+        }
+        /* ইউজার মাউস নিলে বাটনের কালার একটু হালকা হবে যা দেখতে সুন্দর লাগবে */
+        button:hover, .btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px); /* সামান্য উপরে উঠবে */
+        }
+        footer {
+            background: #0f172a;
+            color: white;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            font-size: 14px;
+            box-shadow: 0 -4px 15px rgba(15, 23, 42, 0.1);
+            z-index: 1000;
+        }
+        footer p {
+            margin: 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📚 GYANO-X</h1>
+        <p>Carry on your study with Gyano-X</p>
+    </header>
+
+    <div class="container">
+        <!-- 1. Motivation Section -->
+        <section class="card" style="text-align: center; padding: 25px; border: 2px solid #e2e8f0; border-radius: 12px; background: #f8fafc;">
+            <h2>🔥 MOTIVATION HUB</h2>
+           <!-- <p id="quote">লোড হচ্ছে...</p>
+            <button onclick="newQuote()">নতুন Quote</button>-->
+            
+            <div style="margin-top: 15px;">
+                <a href="mtvn.html" style="color: #A52A2A; text-decoration: none; font-weight: bold; font-size: 14px;">
+                  স্ক্রল করুন, অনুপ্রাণিত হোন  ➡️
+                </a>
+            </div>
+        </section>
+
+        <!-- 2. Daily Quiz -->
+        <section class="card" style="text-align: center; padding: 25px; border: 2px solid #e2e8f0; border-radius: 12px; background: #f8fafc;">       
+            <h2>🧠 Daily Quiz</h2>
+            <p>তোমার জ্ঞান পরীক্ষা করতে কুইজ পেজে যাও।</p>
+            <a href="quiz.html" class="btn">কুইজ শুরু করো ➔</a>
+        </section>
+
+        <!-- 3. GK section -->
+        <section class="card" style="text-align: center; padding: 25px; border: 2px solid #e2e8f0; border-radius: 12px; background: #f8fafc;">
+            <h2>📖 General Knowledge (GK) ভাণ্ডার</h2>
+            <p>সাম্প্রতিক ও গুরুত্বপূর্ণ সাধারণ জ্ঞান একনজরে পড়ে নাও।</p>
+            <a href="gk.html" class="btn">জিকে পড়তে যান ➔</a>
+        </section>
+
+        <!-- 4. English Vocabulary & Grammar -->
+        <section class="card" style="text-align: center; padding: 25px; border: 2px solid #e2e8f0; border-radius: 12px; background: #f8fafc;">
+            <h2 style="color: #111827; font-size: 24px; font-weight: bold; margin-top: 0;">📖 IELTS Vocabulary & Grammar Matrix</h2>
+            <p style="color: #0f172a; font-size: 16px; font-weight: 500; margin-bottom: 20px;">
+               ব্যান্ড স্কোর বুস্টিং শব্দার্থ (Vocabs) এবং সিক্রেট গ্রামার রুলস একনজরে দেখে নাও।স্কোর বুস্ট করতে ট্যাপ করুন ➔
+            </p>
+            <a href="ep.html" class="btn" style="border-radius: 50px; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);">
+                ইংরেজি পড়তে যান ➔
+            </a>
+        </section>
+          <!-- 5. Advanced Concept Booster -->
+        <section class="card" style="text-align: center; padding: 25px; border: 2px solid #e2e8f0; border-radius: 12px; background: #f8fafc;">       
+            <h2>Advanced Concept Booster</h2>
+            <p>বিজ্ঞানের গভীর কনসেপ্ট ও বুদ্ধিবৃত্তিক প্রশ্নোত্তর</p>
+            <a href="j.html" class="btn">কনসেপ্ট ভিত্তিক শেখা শুরু করো ➔</a>
+        </section>
+    </div>
+
+    <!-- একটিমাত্র ফিক্সড সুন্দর ফুটার -->
+    <footer>
+        <p>🚀 GYANO-X // Made with ❤️ for the Rural Students of Bangladesh</p>
+    </footer>
+
+  <!--  <!-- 🧠 জাভাস্ক্রিপ্ট লজিক -->
+    <script>
+        let quotes = [
+            "পরিশ্রম কখনো বৃথা যায় না, আজ না হয় কাল তার ফল তুমি পাবেই। 💪",
+            "সাফল্যের কোনো গোপন মন্ত্র নেই, এটি হলো কঠোর পরিশ্রমের ফল। ✨",
+            "নিজের ওপর বিশ্বাস রাখো, তুমি যতটুকু ভাবো তার চেয়েও বেশি শক্তিশালী। 🔥"
+        ];
+
+        function newQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            const quoteElement = document.getElementById('quote');
+            if (quoteElement) {
+                quoteElement.innerText = quotes[randomIndex];
+            }
+        }-->
+
+        // পেজ পুরোপুরি লোড হওয়ার পর স্বয়ংক্রিয়ভাবে উক্তি দেখানোর আধুনিক নিয়ম
+        document.addEventListener('DOMContentLoaded', newQuote);
+    </script>
+</body>
+</html>

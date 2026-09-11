@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENGLISH special quiz</title>
+<style>
+body{font-family:Arial, sans-serif; background:#e8f5e9; padding:12px; max-width:620px; margin:auto;}
+h1{text-align:center; color:#2e7d32; margin-bottom: 5px;}
+
+/* সেট সিলেকশন এরিয়া */
+.set-container { background: white; padding: 12px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,.1); text-align: center; }
+.set-container p { margin: 0 0 10px 0; font-weight: bold; color: #444; }
+.btn-group { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.set-btn { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.2s; }
+.set-btn.active, .set-btn:hover { background: #2e7d32; color: white; border-color: #2e7d32; }
+
+/* কুইজ কার্ড ও অপশন বাটন */
+.card{background:white; padding:14px; border-radius:12px; margin:12px 0; box-shadow:0 2px 8px rgba(0,0,0,.1);}
+button.opt{width:100%; padding:11px; margin:5px 0; border:1px solid #ddd; border-radius:8px; background:#f1f8e9; text-align:left; font-size:15px; cursor: pointer; transition: 0.2s;}
+button.opt:hover{background: #e8f5e9;}
+button.opt.correct{background:#c8e6c9!important; border-color:green; color: #1b5e20; font-weight: bold;}
+button.opt.wrong{background:#ffcdd2!important; border-color:red; color: #b71c1c;}
+
+/* স্কোর ও প্রোগ্রেস বার */
+#top{display:flex; justify-content:space-between; font-weight:bold; position:sticky; top:0; background:#e8f5e9; padding:8px 0; z-index:10;}
+#barWrap{height:10px; background:#ddd; border-radius:5px; overflow:hidden; margin:5px 0 15px;}
+#bar{height:100%; background:#2e7d32; width:0%; transition:0.3s;}
+#nextBtn{width:100%; padding:14px; background:#2e7d32; color:white; border:none; border-radius:10px; font-size:18px; margin:15px 0; display:none; cursor: pointer;}
+</style>
+</head>
+<body>
+<h1> ENGLISH special quiz</h1>
+
+<!-- এখানে ৭টি সেট করা হয়েছে যাতে ১০০টি প্রশ্নই চলে আসে -->
+<div class="set-container">
+    <p>আপনার পছন্দের কুইজ সেট সিলেক্ট করুন:</p>
+    <div class="btn-group">
+        <button class="set-btn active" onclick="changeSet(0)">সেট ১ (১-১৫)</button>
+        <button class="set-btn" onclick="changeSet(1)">সেট ২ (১৬-৩০)</button>
+        <button class="set-btn" onclick="changeSet(2)">সেট ৩ (৩১-৪৫)</button>
+        <button class="set-btn" onclick="changeSet(3)">সেট ৪ (৪৬-৬০)</button>
+        <button class="set-btn" onclick="changeSet(4)">সেট ৫ (৬১-৭৫)</button>
+        <button class="set-btn" onclick="changeSet(5)">সেট ৬ (৭৬-৯০)</button>
+        <button class="set-btn" onclick="changeSet(6)">সেট ৭ (৯১-১০০)</button>
+    </div>
+</div>
+
+<div id="top"><span id="pageInfo"></span><span id="scoreInfo">Score: 0/0</span></div>
+<div id="barWrap"><div id="bar"></div></div>
+<div id="quiz"></div>
+<button id="nextBtn" onclick="nextSet()">পরের ১৫ টা ➡️</button>
+<script>
+
+  const allQuestions = [
+  // --- Part 1: Textbook Based MCQ (English For Today) ---
+  {
+    q: "What is the antonym of the word 'Apartheid' used in the lesson on Nelson Mandela?",
+    o: ["Segregation", "Discrimination", "Reconciliation", "Separation"],
+    a: 2 // C
+  },
+  {
+    q: "In the poem 'The Traffic Police', the giant is compared to —",
+    o: ["Monster", "Balboa", "Goliath", "Titanic"],
+    a: 2 // C
+  },
+  {
+    q: "The word 'Diaspora' is associated with —",
+    o: ["Integration", "Migration", "Settlement", "Adaptation"],
+    a: 1 // B
+  },
+  {
+    q: "'Hold fast to dreams / For if dreams die' — Who wrote these lines?",
+    o: ["D.H. Lawrence", "Langston Hughes", "William Wordsworth", "Robert Frost"],
+    a: 1 // B
+  },
+  {
+    q: "What does the word 'Amerigo' represent in your textbook?",
+    o: ["A continent", "A street child", "A scientist", "A space shuttle"],
+    a: 1 // B
+  },
+  {
+    q: "The word 'Ecocide' refers to the destruction of —",
+    o: ["Economy", "Ecology/Environment", "Society", "Human beings"],
+    a: 1 // B
+  },
+  {
+    q: "Nelson Mandela was awarded the Nobel Peace Prize in —",
+    o: ["1990", "1993", "1994", "1999"],
+    a: 1 // B
+  },
+  {
+    q: "Synonym of 'Etiquette' is —",
+    o: ["Fashion", "Behavior", "Manners", "Tradition"],
+    a: 2 // C
+  },
+  {
+    q: "In the lesson 'Craft Crafts in Our Time', what is 'Kalataran'?",
+    o: ["A village", "A non-profit organization", "A type of fabric", "A fair"],
+    a: 1 // B
+  },
+  {
+    q: "What is the adjective form of the word 'Universe' used in the text?",
+    o: ["Universally", "Universal", "University", "Universalize"],
+    a: 1 // B
+  },
+
+  // --- Part 2: Advanced English Grammar MCQ ---
+  {
+    q: "No sooner had the thief seen the police ______ he ran away.",
+    o: ["then", "than", "when", "before"],
+    a: 1 // B
+  },
+  {
+    q: "The doctor suggested that the patient ______ weight.",
+    o: ["lose", "loses", "lost", "will lose"],
+    a: 0 // A
+  },
+  {
+    q: "Scarcely had I reached the station ______ the train left.",
+    o: ["than", "when", "then", "before"],
+    a: 1 // B
+  },
+  {
+    q: "If I ______ you, I would not accept the offer.",
+    o: ["am", "was", "were", "had been"],
+    a: 2 // C
+  },
+  {
+    q: "He made me ______ the work twice.",
+    o: ["do", "to do", "doing", "done"],
+    a: 0 // A
+  },
+  {
+    q: "I am looking forward to ______ from you soon.",
+    o: ["hear", "hearing", "heard", "be hearing"],
+    a: 1 // B
+  },
+  {
+    q: "Neither the teacher nor the students ______ present in the meeting.",
+    o: ["was", "were", "is", "has been"],
+    a: 1 // B
+  },
+  {
+    q: "Not only Shimu but also her brothers ______ soccer.",
+    o: ["plays", "play", "playing", "has played"],
+    a: 1 // B
+  },
+  {
+    q: "Choose the correct use of inverted word order:",
+    o: ["Seldom I have seen such a beautiful sight.", "Seldom have I seen such a beautiful sight.", "Seldom I saw such a beautiful sight.", "Seldom do I saw such a beautiful sight."],
+    a: 1 // B
+  },
+  {
+    q: "The news he gave me ______ shocking.",
+    o: ["were", "was", "are", "have been"],
+    a: 1 // B
+  },
+  {
+    q: "It is high time we ______ our bad habits.",
+    o: ["change", "changed", "will change", "have changed"],
+    a: 1 // B
+  },
+  {
+    q: "I spent ______ money I had.",
+    o: ["little", "a little", "the little", "many"],
+    a: 2 // C
+  },
+  {
+    q: "He talks as if he ______ everything.",
+    o: ["knows", "knew", "had known", "was knowing"],
+    a: 1 // B
+  },
+  {
+    q: "The jury ______ divided in their opinions.",
+    o: ["was", "were", "is", "has been"],
+    a: 1 // B
+  },
+  {
+    q: "One of the prime ministers ______ present at the summit.",
+    o: ["was", "were", "are", "have been"],
+    a: 0 // A
+  },
+  {
+    q: "Rice sells ______ seventy taka a kg.",
+    o: ["with", "at", "by", "for"],
+    a: 1 // B
+  },
+  {
+    q: "I have no money ______ hand.",
+    o: ["in", "on", "at", "by"],
+    a: 1 // B
+  },
+  {
+    q: "He died ______ overeating.",
+    o: ["of", "by", "from", "for"],
+    a: 2 // C
+  },
+  {
+    q: "The climate of Cox's Bazar is better than ______ .",
+    o: ["Dhaka", "that of Dhaka", "those of Dhaka", "Dhaka's climate"],
+    a: 1 // B
+  },
+  {
+    q: "Each of the boys ______ rewarded.",
+    o: ["were", "was", "are", "have been"],
+    a: 1 // B
+  },
+
+  // --- Part 3: Appropriate Prepositions & Memorization ---
+  {
+    q: "He is devoid ______ common sense.",
+    o: ["of", "off", "with", "in"],
+    a: 0 // A
+  },
+  {
+    q: "The man was accused ______ theft.",
+    o: ["for", "of", "with", "by"],
+    a: 1 // B
+  },
+  {
+    q: "I am not envious ______ his success.",
+    o: ["at", "of", "for", "by"],
+    a: 1 // B
+  },
+  {
+    q: "What is the meaning of the idiom 'Achilles' heel'?",
+    o: ["A strong point", "A weak point", "An expensive item", "A fast runner"],
+    a: 1 // B
+  },
+  {
+    q: "'Call it a day' means —",
+    o: ["To start a day", "To stop working on something", "A beautiful day", "To wish someone"],
+    a: 1 // B
+  },
+  {
+    q: "What is the synonym of 'Ephemeral'?",
+    o: ["Eternal", "Short-lived", "Permanent", "Heavy"],
+    a: 1 // B
+  },
+  {
+    q: "Select the correct spelling:",
+    o: ["Bureaucracy", "Burocracy", "Bureaucracy", "Bureacracy"],
+    a: 0 // A
+  },
+  {
+    q: "Find the correctly spelled word:",
+    o: ["Lieutenant", "Lievtenant", "Leutenant", "Lieutenent"],
+    a: 0 // A
+  },
+  {
+    q: "Antonym of 'Altruism' is —",
+    o: ["Benevolence", "Selfishness", "Charity", "Kindness"],
+    a: 1 // B
+  },
+  {
+    q: "'At daggers drawn' means —",
+    o: ["Friendly", "In a state of open hostility", "Playing with knives", "Confused"],
+    a: 1 // B
+  },
+  // --- Part 4: Sentence Correction & Core Rules ---
+  {
+    q: "Identify the correct sentence:",
+    o: ["He insisted on me to go there.", "He insisted on my going there.", "He insisted to go there.", "He insisted me for going there."],
+    a: 1 // B
+  },
+  {
+    q: "Which one is correct?",
+    o: ["Hamlet is a finest drama.", "Hamlet is the finest drama.", "Hamlet is most finest drama.", "Hamlet is more finer drama."],
+    a: 1 // B
+  },
+  {
+    q: "Choose the correct sentence:",
+    o: ["I prefer death than dishonor.", "I prefer death to dishonor.", "I prefer death before dishonor.", "I prefer death more than dishonor."],
+    a: 1 // B
+  },
+  {
+    q: "Find the correct sentence:",
+    o: ["Ten miles are a long distance.", "Ten miles is a long distance.", "Ten miles were a long distance.", "Ten mile is a long distance."],
+    a: 1 // B
+  },
+  {
+    q: "What is the grammatically correct interrogative form?",
+    o: ["Whom did you meet yesterday?", "Whom you met yesterday?", "Who you did meet yesterday?", "Who have you met yesterday?"],
+    a: 0 // A
+  },
+  {
+    q: "This is ______ unique opportunity.",
+    o: ["an", "a", "the", "no article"],
+    a: 1 // B
+  },
+  {
+    q: "He works hard lest he ______ fail.",
+    o: ["would", "should", "will", "can"],
+    a: 1 // B
+  },
+  {
+    q: "Bread and butter ______ my favorite breakfast.",
+    o: ["are", "is", "were", "have been"],
+    a: 1 // B
+  },
+  {
+    q: "Identify the correct passive form: 'Panic seized the writer.'",
+    o: ["The writer was seized by panic.", "The writer was seized with panic.", "The writer was seized in panic.", "The writer seized by panic."],
+    a: 1 // B
+  },
+  {
+    q: "I wish I ______ a king.",
+    o: ["am", "was", "were", "be"],
+    a: 2 // C
+  },
+  {
+    q: "Choose the correct sentence with parallel structure:",
+    o: ["He likes swimming, dancing, and to sing.", "He likes swimming, to dance, and singing.", "He likes swimming, dancing, and singing.", "He likes to swim, dancing, and sing."],
+    a: 2 // C
+  },
+  {
+    q: "Correct the dangling modifier: 'Walking in the garden, a snake bit him.'",
+    o: ["Walking in the garden, he was bitten by a snake.", "While he was walking in the garden, a snake bit him.", "A snake bit him walking in the garden.", "Both A and B are correct."],
+    a: 3 // D
+  },
+  {
+    q: "He is a ______ boy.",
+    o: ["five-years-old", "five-year-old", "five years old", "five year old"],
+    a: 1 // B
+  },
+  {
+    q: "Hardly ______ stepped out when it started raining.",
+    o: ["I had", "had I", "I did", "did I"],
+    a: 1 // B
+  },
+  {
+    q: "The number of students ______ increasing day by day.",
+    o: ["are", "is", "were", "have been"],
+    a: 1 // B
+  },
+  {
+    q: "Many a student ______ failed in the exam.",
+    o: ["have", "has", "are", "were"],
+    a: 1 // B
+  },
+  {
+    q: "I am used to ______ early in the morning.",
+    o: ["get up", "getting up", "got up", "gets up"],
+    a: 1 // B
+  },
+  {
+    q: "He ran fast lest he ______ miss the train.",
+    o: ["would", "should", "could", "might not"],
+    a: 1 // B
+  },
+  {
+    q: "Would you mind ______ the window?",
+    o: ["open", "opening", "to open", "opened"],
+    a: 1 // B
+  },
+  {
+    q: "Had I known this before, I ______ you.",
+    o: ["would help", "will help", "ambassadors", "would have helped"],
+    a: 3 // D
+  },
+  {
+    q: "Identify the correct sentence:",
+    o: ["Tell me where does he live.", "Tell me where he lives.", "Tell me where he live.", "Tell me where do he live."],
+    a: 1 // B
+  },
+  {
+    q: "Physics ______ my favorite subject.",
+    o: ["are", "is", "were", "have been"],
+    a: 1 // B
+  },
+  {
+    q: "The cattle ______ grazing in the field.",
+    o: ["is", "are", "was", "has been"],
+    a: 1 // B
+  },
+  {
+    q: "It was I who ______ to blame.",
+    o: ["is", "am", "are", "was"],
+    a: 1 // B
+  },
+  {
+    q: "Choose the correct spelling:",
+    o: ["Millennium", "Millenium", "Milennium", "Milenium"],
+    a: 0 // A
+  },
+  {
+    q: "Synonym of 'Pragmatic' is —",
+    o: ["Practical", "Theoretical", "Idealistic", "Romantic"],
+    a: 0 // A
+  },
+  {
+    q: "Antonym of 'Vague' is —",
+    o: ["Clear", "Unclear", "Dim", "Obscure"],
+    a: 0 // A
+  },
+  {
+    q: "'Out of the blue' means —",
+    o: ["Completely unexpectedly", "From the sky", "Depressed", "Intentionally"],
+    a: 0 // A
+  },
+  {
+    q: "He is blind ______ his son's faults.",
+    o: ["of", "to", "with", "in"],
+    a: 1 // B
+  },
+  {
+    q: "She prides herself ______ her beauty.",
+    o: ["on", "in", "at", "of"],
+    a: 0 // A
+  },
+  {
+    q: "Correct the sentence: 'He returned back from Dhaka.'",
+    o: ["He returned from Dhaka.", "He backed from Dhaka.", "He came back from Dhaka.", "Both A and C are correct."],
+    a: 3 // D
+  },
+  {
+    q: "One should be careful about ______ duty.",
+    o: ["his", "her", "one's", "their"],
+    a: 2 // C
+  },
+  {
+    q: "The ship sank and all the passengers ______ .",
+    o: ["drowned", "sank", "went down", "immersed"],
+    a: 0 // A
+  },
+  {
+    q: "Identify the plural noun form:",
+    o: ["Crisis", "Datum", "Phenomena", "Analysis"],
+    a: 2 // C
+  },
+  {
+    q: "'An ordinance' means —",
+    o: ["A law", "A weapon", "An office", "A festival"],
+    a: 0 // A
+  },
+  {
+    q: "What is the noun form of the verb 'Maintain'?",
+    o: ["Maintainance", "Maintenance", "Maintenancy", "Maintaining"],
+    a: 1 // B
+  },
+  {
+    q: "He requested that she ______ the room.",
+    o: ["leaves", "leave", "left", "will leave"],
+    a: 1 // B
+  },
+  {
+    q: "He is the man ______ I know is honest.",
+    o: ["whom", "who", "which", "whose"],
+    a: 1 // B
+  },
+  {
+    q: "Correct the error: 'I, you and he are friends.'",
+    o: ["You, he and I are friends.", "He, you and I are friends.", "I, he and you are friends.", "You, I and he are friends."],
+    a: 0 // A
+  },
+  {
+    q: "It has been raining ______ Monday last.",
+    o: ["for", "since", "from", "in"],
+    a: 1 // B
+  },
+  {
+    q: "Select the correct sentence:",
+    o: ["He is as tall as me.", "He is as tall as I.", "He is as tall like me.", "He is more tall than I."],
+    a: 1 // B
+  },
+  {
+    q: "Choose the correct passive form of 'Who did this?'",
+    o: ["By whom was this done?", "By whom this was done?", "Who was this done by?", "Both A and C are correct."],
+    a: 3 // D
+  },
+  {
+    q: "This ring is made ______ gold.",
+    o: ["from", "of", "by", "with"],
+    a: 1 // B
+  },
+  {
+    q: "The antonym of 'Benevolent' is —",
+    o: ["Kind", "Malevolent", "Generous", "Friendly"],
+    a: 1 // B
+  },
+  {
+    q: "Find the correctly spelled word:",
+    o: ["Questionnaire", "Questionaire", "Questionare", "Questionnairee"],
+    a: 0 // A
+  },
+  {
+    q: "'Burning question' means —",
+    o: ["An important and hot topic", "A question about fire", "A useless argument", "An easy query"],
+    a: 0 // A
+  },
+  {
+    q: "She is proficient ______ English.",
+    o: ["at", "in", "with", "on"],
+    a: 1 // B
+  },
+  {
+    q: "The plural form of 'Oasis' is —",
+    o: ["Oases", "Oasises", "Oasis", "Oasess"],
+    a: 0 // A
+  },
+  {
+    q: "What type of noun is 'Team'?",
+    o: ["Proper", "Common", "Collective", "Abstract"],
+    a: 2 // C
+  },
+  {
+    q: "Choose the correct indirect speech: He said, 'Good morning, my friend.'",
+    o: ["He wished his friend good morning.", "He told his friend good morning.", "He said good morning to his friend.", "He bade good morning his friend."],
+    a: 0 // A
+  },
+  {
+    q: "Correct the sentence: 'He absorptioned in thought.'",
+    o: ["He was absorbed in thought.", "He absorbed in thought.", "He is absorbing in thought.", "He has absorbed in thought."],
+    a: 0 // A
+  },
+  {
+    q: "Look ______ the word in the dictionary.",
+    o: ["at", "up", "for", "after"],
+    a: 1 // B
+  },
+  {
+    q: "'To end in smoke' means —",
+    o: ["To come to nothing", "To create fire", "To smoke heavily", "To succeed perfectly"],
+    a: 0 // A
+  },
+  {
+    q: "Select the correctly spelled word:",
+    o: ["Maintenance", "Maintanance", "Maintenence", "Maintainance"],
+    a: 0 // A
+  },
+  {
+    q: "Give the antonym of 'Extravagant':",
+    o: ["Frugal", "Wasteful", "Generous", "Lavish"],
+    a: 0 // A
+  },
+  {
+    q: "He has no desire ______ fame.",
+    o: ["for", "of", "to", "in"],
+    a: 0 // A
+  },
+  {
+    q: "Identify the feminine gender form:",
+    o: ["Drone", "Stag", "Mare", "Bachelor"],
+    a: 2 // C
+  },
+  {
+    q: "Find the correct application of Subjunctive: 'The committee insisted that he ______ present.'",
+    o: ["is", "was", "be", "should to be"],
+    a: 2 // C
+  },
+  {
+    q: "He did it with a view to ______ me.",
+    o: ["help", "helping", "helped", "to help"],
+    a: 1 // B
+  },
+  {
+    q: "Choose the correct use of conditional: 'If you had helped him, he ______ .'",
+    o: ["would succeed", "would have succeeded", "will succeed", "succeeded"],
+    a: 1 // B
+  }
+];
+
+ 
+  let currentSet = 0, totalScore = 0, totalAnswered = 0;
+  const perPage = 15;
+
+  function changeSet(setNumber) {
+    currentSet = setNumber;
+    let buttons = document.querySelectorAll('.set-btn');
+    buttons.forEach((b, idx) => {
+        if(idx === setNumber) b.classList.add('active');
+        else b.classList.remove('active');
+    });
+    window.scrollTo(0,0); 
+    loadSet();
+  }
+
+  function loadSet() {
+    const quizDiv = document.getElementById('quiz'); 
+    quizDiv.innerHTML = '';
+    document.getElementById('nextBtn').style.display = 'none';
+    
+    let start = currentSet * perPage; 
+    let end = Math.min(start + perPage, allQuestions.length);
+    
+    if (start >= allQuestions.length) {
+        quizDiv.innerHTML = `<div class='card' style='text-align:center; color:red;'>এই সেটে কোনো প্রশ্ন যোগ করা হয়নি!</div>`;
+        document.getElementById('pageInfo').innerText = `Set ${currentSet + 1} (0-0 / ${allQuestions.length})`;
+        return;
+    }
+
+    document.getElementById('pageInfo').innerText = `Set ${currentSet + 1} (${start + 1}-${end} / ${allQuestions.length})`;
+    
+    for (let i = start; i < end; i++) {
+      const q = allQuestions[i]; 
+      const card = document.createElement('div'); 
+      card.className = 'card';
+      card.innerHTML = `<b>${i + 1}. ${q.q}</b>`;
+      
+      q.o.forEach((opt, idx) => {
+        const btn = document.createElement('button'); 
+        btn.className = 'opt';
+        btn.innerText = `${['A', 'B', 'C', 'D'][idx]}. ${opt}`;
+        
+        btn.onclick = () => {
+          if (card.dataset.done) return; 
+          card.dataset.done = 1;
+          
+          if (idx === q.a) {
+            btn.classList.add('correct'); 
+            totalScore++;
+          } else {
+            btn.classList.add('wrong'); 
+            card.querySelectorAll('.opt')[q.a].classList.add('correct');
+          }
+          
+          totalAnswered++; 
+          document.getElementById('scoreInfo').innerText = `Score: ${totalScore}/${totalAnswered}`;
+          document.getElementById('bar').style.width = (totalAnswered / allQuestions.length * 100) + '%';
+          
+          if (document.querySelectorAll('.card[data-done]').length === (end - start)) {
+            let nextStart = (currentSet + 1) * perPage;
+            if (nextStart < allQuestions.length) {
+              document.getElementById('nextBtn').style.display = 'block';
+            } else {
+              document.getElementById('nextBtn').style.display = 'none';
+              
+              const resultCard = document.createElement('div');
+              resultCard.className = 'card';
+              resultCard.style.cssText = 'text-align:center; color:green; font-weight:bold; margin-top:20px;';
+              resultCard.innerHTML = `🎉 Done! Final Score: ${totalScore}/${allQuestions.length} (${Math.round(totalScore/allQuestions.length*100)}%)`;
+              quizDiv.appendChild(resultCard);
+            }
+          }
+        };
+        card.appendChild(btn);
+      });
+      quizDiv.appendChild(card);
+    }
+  }
+
+  function nextSet() {
+    currentSet++; 
+    changeSet(currentSet);
+  }
+
+  loadSet();
+</script>
+</body>
+</html>

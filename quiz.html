@@ -1,0 +1,157 @@
+
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily GK Quiz - ক্যাটাগরি</title>
+    <style>
+        /* গলোবাল স্টাইল ও রিসেট */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* মেইন কন্টেইনার */
+        .quiz-container {
+            background: #ffffff;
+            max-width: 650px;
+            width: 100%;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+
+        /* গ্রিড এবং বাটন স্টাইল */
+        .category-grid {
+            display: grid;
+            grid-template-columns: 100%;
+            gap: 15px;
+        }
+
+        /* রেসপনসিভ গ্রিড (মোবাইলের চেয়ে বড় স্ক্রিনের জন্য) */
+        @media (min-width: 480px) {
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .category-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 20px;
+            font-size: 17px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .category-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .category-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* বিষয়ের কালার কোডিং */
+        .biology { background-color: #006400; }    /* সবুজ */
+        .physics { background-color:#808080; }    /* নীল */
+        .chemistry { background-color:#3498db ; }  /* বেগুনি */
+        .math { background-color: #A52A2A; }       /* টারকোয়াইজ ব্লু */
+        .english { background-color:#4B0082; }    /* কমলা */
+        .gk { background-color: #808000; }         /* লাল */
+
+        /* ফিরে যাওয়ার বাটন */
+        .back-btn {
+            display: inline-block;
+            margin-top: 25px;
+            color: #7f8c8d;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .back-btn:hover {
+            color: #2c3e50;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h1>🧠 কুইজ ক্যাটাগরি</h1>
+        <p class="subtitle">আপনার পছন্দের বিষয়টি নির্বাচন করে কুইজ শুরু করুন</p>
+
+        <div class="category-grid">
+            <!-- জীববিজ্ঞান -->
+            <a href="bio,quiz.html" class="category-btn biology">
+                🌿 জীববিজ্ঞান (Biology)
+            </a>
+
+            <!-- পদার্থবিজ্ঞান -->
+            <a href="ph.q.html" class="category-btn physics">
+                ⚡ পদার্থবিজ্ঞান (Physics)
+            </a>
+
+            <!-- রসায়ন -->
+            <a href="c.q.html" class="category-btn chemistry">
+                🧪 রসায়ন (Chemistry)
+            </a>
+
+            <!-- গণিত -->
+            <a href="m.html" class="category-btn math">
+                📐 গণিত (Mathematics)
+            </a>
+
+            <!-- ইংরেজি -->
+            <a href="eq.html" class="category-btn english">
+                🔤 ইংরেজি (English)
+            </a>
+
+            <!-- সাধারণ জ্ঞান -->
+            <a href="gq.html" class="category-btn gk">
+                🌍 সাধারণ জ্ঞান (GK)
+            </a>
+        </div>
+
+        <!-- মূল পাতায় ফিরে যাওয়ার লিংক -->
+        <a href="g.html" class="back-btn">🏠 হোম পেজে ফিরুন</a>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motivational Corner</title>
+<style>
+body {
+  font-family: 'Arial', sans-serif; 
+  background: white; 
+  padding: 15px; 
+  max-width: 620px; 
+  margin: auto;
+  text-align: center;
+}
+h1 {
+  color: blue; 
+  margin-top: 30px;
+  font-size: 28px;
+}
+#quote-container {
+  margin-top: 30px;
+}
+.quote-card {
+  background: white; 
+  padding: 30px 20px; 
+  border-radius: 15px; 
+  margin: 25px 0; 
+  box-shadow: 0 4px 15px rgba(0,0,0,.7);
+  text-align: center;
+  /* নতুন কার্ড স্ক্রিন জুড়ে আসার সময় একটি হালকা অ্যানিমেশন */
+  animation: fadeIn 0.5s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.quote-text {
+  font-size: 19px;
+  color:#A52A2A;
+  font-weight: bold;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+.author-text {
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+}
+.loading {
+  color: #2e7d32;
+  font-weight: bold;
+  margin: 20px 0;
+  font-size: 15px;
+}
+.top-nav {
+  position: sticky;
+  top: 0;
+  background: #e8f5e9;
+  padding: 10px 0;
+  z-index: 100;
+  border-bottom: 1px solid #c8e6c9;
+}
+.back-link {
+  color: #2e7d32;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 15px;
+}
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+  <a href="g.html" class="back-link">→🏠 হোম পেজে ফিরুন</a>
+</div>
+
+<h1>💡 মোটিভেশনাল কর্নার</h1>
+<p style="color: #555;">নিচের দিকে স্ক্রল করতে থাকুন , একটার পর একটা বুক কাঁপানো উক্তি আসতেই থাকবে!</p>
+
+<!-- এখানে সব উক্তির কার্ড স্বয়ংক্রিয়ভাবে জমা হবে -->
+<div id="quote-container"></div>
+
+<!-- স্ক্রল করার সময় নিচে একটি হালকা লোডিং মেসেজ দেখাবে -->
+<div id="loader" class="loading">নিচে আরও স্ক্রল করুন... ✨</div>
+
+<script>
+const quotes = [
+  {
+    t: "স্বপ্ন সেটা নয় যা মানুষ ঘুমিয়ে দেখে, স্বপ্ন সেটাই যা মানুষকে ঘুমাতে দেয় না।",
+    a: "এ পি জে আব্দুল কালাম"
+  },
+  {
+    t: "আজকের কঠিন পরিশ্রম আগামীকালের সুন্দর ভবিষ্যতের পথ তৈরি করে।",
+    a: "অননোন"
+  },
+  {
+    t: "যদি তুমি তোমার কাজকে ভালোবাসো, তবে সফলতা তোমার হাতের মুঠোয় আসবেই।",
+    a: "স্টিভ জবস"
+  },
+  {
+    t: "ভুল করা কোনো ব্যর্থতা নয়, ভুল থেকে কিছু না শিখতে পারাটাই আসল ব্যর্থতা।",
+    a: "বিল গেটস"
+  },
+  {
+    t: "চেষ্টা কখনো বৃথা যায় না। তুমি যতটুকু মেহনত করবে, তার ফল ঠিক সময়ে পেয়ে যাবে।",
+    a: "অননোন"
+  },
+  {
+    t: "অন্যের চেয়ে ভালো করার দরকার নেই, শুধু গতকালের নিজের চেয়ে আজকে একটু উন্নত হও।",
+    a: "অননোন"
+  },
+  {
+    t: "কঠিন সময়ে ভেঙে পড়া সহজ, কিন্তু উঠে দাঁড়িয়ে লড়াই করাটাই আসল সাহসিকতা।",
+    a: "অননোন"
+  },
+  {
+    t: "তোমার অলসতা তোমার সবচেয়ে বড় শত্রু। আজ থেকে শুরু করো, এখনই সময়।",
+    a: "অননোন"
+  },
+  {
+    t: "তুমি কতটা ধীর গতিতে এগোচ্ছো তা বিষয় নয়, আসল বিষয় হলো তুমি থেমে যাওনি।",
+    a: "কনফুসিয়াস"
+  },
+  {
+    t: "সফলতা হলো প্রতিদিনের ছোট ছোট প্রচেষ্টার সমষ্টি।",
+    a: "রবার্ট কোলিয়ার"
+  },
+  {
+    t: "পড়ালেখা শুধু একটি পরীক্ষা পাশের জন্য নয়, এটি নিজেকে জানার ও গড়ার মাধ্যম।",
+    a: "অননোন"
+  },
+  {
+    t: "তোমার আজকের ত্যাগই নির্ধারণ করবে তোমার আগামীকালের অবস্থান।",
+    a: "অননোন"
+  },
+  {
+    t: "অসম্ভব শব্দটি কেবল বোকাদের অভিধানেই পাওয়া যায়।",
+    a: "নেপোলিয়ন বোনাপার্ট"
+  },
+  {
+    t: "তুমি আজ অলসতা করে যা হারাচ্ছো, তা আগামীকাল দ্বিগুণ পরিশ্রম করেও ফিরে পাবে না।",
+    a: "নেপোলিয়ন বোনাপার্ট"
+  },
+  {
+    t: "লড়াইয়ে জেতার জন্য শুধু শক্তি নয়, সঠিক রণকৌশল এবং একাগ্রতা প্রয়োজন।",
+    a: "নেপোলিয়ন বোনাপার্ট"
+  },
+  {
+    t: "প্রতিটি কঠিন পরিস্থিতির মাঝেই লুকিয়ে থাকে বিজয়ের সবচেয়ে বড় সুযোগ।",
+    a: "নেপোলিয়ন বোনাপার্ট"
+  },
+  {
+    t: "নেতৃত্ব হলো এমন এক শক্তি, যা কঠিনতম সময়েও অসম্ভবকে সম্ভব করার আশা দেখায়।",
+    a: "নেপোলিয়ন বোনাপার্ট"
+  },
+  {
+    t: "যে ব্যক্তি নিজের মনকে নিয়ন্ত্রণ করতে পারে না, সে কখনো বড় কোনো বিজয় অর্জন করতে পারে না।",
+    a: "নেপোলিয়ন বোনাপার্ট"
+  },
+  {
+    t: "সফলতা তাদেরই বরণ করে, যারা শেষ মুহূর্ত পর্যন্ত হাল না ছেড়ে লড়াই চালিয়ে যায়।",
+    a: "নেপোলিয়ন বোনাপার্ট"
+  },  {
+    t: "মানুষের মন যা বিশ্বাস এবং কল্পনা করতে পারে, তা অর্জন করাও সম্ভব।",
+    a: "নেপোলিয়ন হিল"
+  },
+  {
+    t: "সুনির্দিষ্ট লক্ষ্য হলো সমস্ত সফলতার প্রারম্ভিক বিন্দু।",
+    a: "নেপোলিয়ন হিল"
+  },
+  {
+    t: "ধৈর্য এবং কঠোর পরিশ্রমের সংমিশ্রণই হলো সফলতার একমাত্র রাজকীয় রাস্তা।",
+    a: "নেপোলিয়ন হিল"
+  },
+  {
+    t: "অপেক্ষা করো না, সঠিক সময় কখনো আসবে না; যেখানে আছো সেখান থেকেই শুরু করো।",
+    a: "নেপোলিয়ন হিল"
+  },
+  {
+    t: "প্রতিটি ব্যর্থতার পেছনে লুকিয়ে থাকে তার সমান বা তার চেয়েও বড় সফলতার বীজ।",
+    a: "নেপোলিয়ন হিল"
+  },
+  {
+    t: "বিজয়ীরা কখনো হাল ছাড়ে না, আর যারা হাল ছেড়ে দেয় তারা কখনো জয়ী হতে পারে না।",
+    a: "নেপোলিয়ন হিল"
+  },
+  {
+    t: "যদি তুমি বড় কোনো কাজ করতে না পারো, তবে ছোট ছোট কাজগুলোই দারুণভাবে করো।",
+    a: "নেপোলিয়ন হিল"
+  }
+
+
+];
+
+const container = document.getElementById('quote-container');
+let lastIndex = -1;
+
+// নতুন কার্ড তৈরি করার ফাংশন
+function createQuoteCard() {
+  let randomIndex;
+  // পরপর একই উক্তি যাতে না আসে তার লজিক
+  do {
+    randomIndex = Math.floor(Math.random() * quotes.length);
+  } while (randomIndex === lastIndex);
+  
+  lastIndex = randomIndex;
+  const currentQuote = quotes[randomIndex];
+  
+  const card = document.createElement('div');
+  card.className = 'quote-card';
+  card.innerHTML = `
+    <div class="quote-text">${currentQuote.t}</div>
+    <div class="author-text">— ${currentQuote.a}</div>
+  `;
+  container.appendChild(card);
+}
+
+// প্রথমবার পেজ ওপেন হলে শুরুতেই ৩টি কার্ড লোড করে রাখা হবে
+for(let i=0; i<3; i++) {
+  createQuoteCard();
+}
+
+// স্ক্রল ট্র্যাকিং লজিক (ইউজার নিচে নামলেই নতুন কার্ড যোগ হবে)
+window.onscroll = function() {
+  // যদি ইউজার স্ক্রল করে পেজের একদম নিচের কাছাকাছি চলে আসে
+  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 150) {
+    createQuoteCard(); // স্বয়ংক্রিয়ভাবে নতুন উক্তি যোগ হবে
+  }
+};
+</script>
+</body>
+</html>
